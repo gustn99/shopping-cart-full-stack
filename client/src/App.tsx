@@ -6,7 +6,7 @@ import { ROUTES } from "@constants/routes";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/shopping-cart-full-stack">
       <Routes>
         <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
         <Route path={ROUTES.CARTS} element={<CartsPage />} />
