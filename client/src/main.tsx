@@ -9,7 +9,11 @@ async function enableMocking() {
   }
 
   const { worker } = await import("./mocks/browser.ts");
-  return worker.start();
+  return worker.start({
+	  serviceWorker: {
+		  url: "/shopping-cart-full-stack/mockServiceWorker.js",
+	  },
+  });
 }
 
 enableMocking().then(() => {
