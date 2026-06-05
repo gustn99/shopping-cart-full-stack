@@ -188,6 +188,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   border-radius: 0.5rem;
   border: none;
   background-color: ${L[`image-placeholder`]};
+	object-fit: cover;
 `,Ga=I.div`
   display: flex;
   flex-direction: column;
