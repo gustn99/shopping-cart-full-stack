@@ -1,33 +1,12 @@
-import type { Cart } from "@/types/cartProduct";
-import fetcher from "../../instance";
+import fetcher from "@apis/instance";
+import { mapServerCartToCarts } from "@apis/carts/dto";
+import type { ServerCartResponse } from "@apis/carts/dto";
 
 const CARTS_API = "/carts";
 
-interface PatchCartQuantityResponse {
-  status: "success" | "error";
-  message: string;
-  data: Cart;
-}
-
-export const patchCartQuantity = async (id: number, quantity: number) => {
-  const { data } = await fetcher.patch<PatchCartQuantityResponse>(
-    `${CARTS_API}/${id}`,
-    { quantity },
+export const getCart = async (cartId: number) => {
+  const response = await fetcher.get<ServerCartResponse>(
+    `${CARTS_API}/${cartId}`,
   );
-  return data;
-};
-
-interface DeleteCartItemResponse {
-  status: "success" | "error";
-  message: string;
-  data: {
-    id: number;
-  };
-}
-
-export const deleteCartItem = async (id: number) => {
-  const { data } = await fetcher.delete<DeleteCartItemResponse>(
-    `${CARTS_API}/${id}`,
-  );
-  return data;
+  return mapServerCartToCarts(response);
 };

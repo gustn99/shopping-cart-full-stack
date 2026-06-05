@@ -22,6 +22,15 @@ export const makeCart = (
   quantity,
 });
 
+// Helper to convert internal Cart to Server format
+const toServerCart = (cart: Cart) => ({
+  id: cart.product.id,
+  name: cart.product.name,
+  price: cart.product.price,
+  imgUrl: cart.product.image,
+  quantity: cart.quantity,
+});
+
 // src/mocks/handlers.ts 의 기본 장바구니와 동일한 구성
 export const DEFAULT_CARTS: Cart[] = [
   makeCart(1, "무선 헤드폰", 129000, 1),
@@ -38,61 +47,63 @@ export function seedCarts(next: Cart[] = DEFAULT_CARTS) {
 }
 
 export const handlers = [
-  http.get("/api/carts", () =>
+  http.get("/api/carts/:cartId", ({ params }) =>
     HttpResponse.json({
-      status: "success",
-      message: "장바구니를 정상적으로 조회하였습니다.",
-      data: carts,
+      status: 200,
+      data: {
+        id: Number(params.cartId),
+        products: carts.map(toServerCart),
+      },
     }),
   ),
 
-  http.patch("/api/carts/:id", async ({ params, request }) => {
-    const id = Number(params.id);
-    const { quantity } = (await request.json()) as { quantity: number };
-    const target = carts.find((cart) => cart.product.id === id);
+  http.patch(
+    "/api/carts/:cartId/products/:productId",
+    async ({ params, request }) => {
+      const productId = Number(params.productId);
+      const { quantity } = (await request.json()) as { quantity: number };
+      const target = carts.find((cart) => cart.product.id === productId);
 
-    if (target) {
-      target.quantity = quantity;
-    }
+      if (target) {
+        target.quantity = quantity;
+      }
 
-    return HttpResponse.json({
-      status: "success",
-      message: "장바구니 상품 수량을 정상적으로 변경하였습니다.",
-      data: target,
-    });
-  }),
+      return HttpResponse.json({
+        status: 200,
+        data: target ? toServerCart(target) : null,
+      });
+    },
+  ),
 
-  http.delete("/api/carts/:id", ({ params }) => {
-    const id = Number(params.id);
-    carts = carts.filter((cart) => cart.product.id !== id);
+  http.delete("/api/carts/:cartId/products/:productId", ({ params }) => {
+    const productId = Number(params.productId);
+    carts = carts.filter((cart) => cart.product.id !== productId);
 
-    return HttpResponse.json({
-      status: "success",
-      message: "장바구니에서 상품을 정상적으로 제거하였습니다.",
-      data: { id },
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
 
-/** GET /api/carts 가 500 을 반환하도록 오버라이드하는 핸들러 (server.use 로 사용) */
-export const cartErrorHandler = http.get("/api/carts", () =>
+/** GET /api/carts/:cartId 가 500 을 반환하도록 오버라이드하는 핸들러 (server.use 로 사용) */
+export const cartErrorHandler = http.get("/api/carts/:cartId", () =>
   HttpResponse.json(
-    { status: "error", message: "서버에서 오류가 발생했습니다." },
+    { status: 500, errorCode: "SERVER_ERROR", errorMessage: "서버에서 오류가 발생했습니다." },
     { status: 500 },
   ),
 );
 
 /**
- * GET /api/carts 응답을 지연시키는 핸들러 (server.use 로 사용).
+ * GET /api/carts/:cartId 응답을 지연시키는 핸들러 (server.use 로 사용).
  * 로딩(Suspense fallback) 구간을 결정적으로 만들어 스켈레톤 노출을 안정적으로 검증한다.
  */
 export const makeDelayedCartHandler = (ms: number) =>
-  http.get("/api/carts", async () => {
+  http.get("/api/carts/:cartId", async ({ params }) => {
     await delay(ms);
     return HttpResponse.json({
-      status: "success",
-      message: "장바구니를 정상적으로 조회하였습니다.",
-      data: carts,
+      status: 200,
+      data: {
+        id: Number(params.cartId),
+        products: carts.map(toServerCart),
+      },
     });
   });
 
