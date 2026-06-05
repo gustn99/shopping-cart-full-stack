@@ -103,6 +103,7 @@ const CartItemImg = styled.img`
   border-radius: 0.5rem;
   border: none;
   background-color: ${COLOR_PALETTE["image-placeholder"]};
+	object-fit: cover;
 `;
 
 const CartItemInfoWrapper = styled.div`
