@@ -16,6 +16,10 @@ module.exports = function importMetaEnvStub({ types: t }) {
       t.objectProperty(t.identifier("SSR"), t.booleanLiteral(false)),
       t.objectProperty(t.identifier("MODE"), t.stringLiteral("test")),
       t.objectProperty(t.identifier("BASE_URL"), t.stringLiteral("/")),
+      t.objectProperty(
+        t.identifier("VITE_API_BASE_URL"),
+        t.stringLiteral("/api"),
+      ),
     ]);
 
   return {

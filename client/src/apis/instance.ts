@@ -33,7 +33,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-const baseUrl = import.meta.env.DEV ? "/api" : "production url";
+const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
 const fetcher = {
   get: async <Response>(
