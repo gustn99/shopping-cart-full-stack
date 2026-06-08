@@ -29,21 +29,22 @@ export default function CartsSection() {
   const { mutate: deleteMutate } = useCartItemDeleteMutation();
   const { navigate } = useOrderConfirmNavigate();
 
-  const initialCheckedItems =
-    getCheckedItemsFromLocalStorage().length === 0
-      ? makeCheckedItem(data)
-      : getCheckedItemsFromLocalStorage();
+	const isSavedCheckedItemsExist =  getCheckedItemsFromLocalStorage().length === 0
+  const initialCheckedItems = isSavedCheckedItemsExist ? makeCheckedItem(data) : getCheckedItemsFromLocalStorage();
 
+	// 상품을 선택/해제하는 로직을 가져온다.
   const { checkedItems, select, unselect, unselectAll } =
     useCheckedItems<Product["id"]>(initialCheckedItems);
-
-  const orderAmount = calcOrderAmount(data, checkedItems);
-  const deliveryFee = calcDeliveryFee(orderAmount);
-  const totalAmount = calcTotalAmount(orderAmount, deliveryFee);
 
   const isAllChecked = checkedItems.length === data.length;
   const isChecked = (id: number) => checkedItems.includes(id);
 
+	// 선택된 상품을 기준으로 주문 금액, 배송비, 총 결제 금액을 계산한다.
+  const orderAmount = calcOrderAmount(data, checkedItems);
+  const deliveryFee = calcDeliveryFee(orderAmount);
+  const totalAmount = calcTotalAmount(orderAmount, deliveryFee);
+
+	// 전체 상품을 선택/해제하고, localStorage에 동기화한다.
   const handleSelectAll = () => {
     if (isAllChecked) {
       removeCheckedItemsFromLocalStorage();
@@ -54,6 +55,7 @@ export default function CartsSection() {
     data.forEach(({ product }) => select(product.id));
   };
 
+	// 개별 상품을 선택/해제하고, localStorage에 동기화한다.
   const handleSelect = (id: number) => {
     if (isChecked(id)) {
       setCheckedItemsToLocalStorage(checkedItems.filter((item) => item !== id));
@@ -64,16 +66,19 @@ export default function CartsSection() {
     select(id);
   };
 
+	// 상품 수량을 변경한다.
   const handleQuantityChange = (id: number, quantity: number) => {
     quantityMutate(id, quantity);
   };
 
+	// 상품을 삭제한다.
   const handleDelete = (id: number) => {
     deleteMutate(id);
     setCheckedItemsToLocalStorage(checkedItems.filter((item) => item !== id));
     unselect(id);
   };
 
+	// 페이지를 전환한다.
   const handleConfirm = () => {
     navigate({
       totalAmount,
