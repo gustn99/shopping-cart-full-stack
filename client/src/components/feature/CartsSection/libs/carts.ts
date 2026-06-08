@@ -11,7 +11,7 @@ export const calcOrderAmount = (data: Cart[], checkedItems: number[]) =>
   }, 0);
 
 export const calcDeliveryFee = (orderAmount: number) =>
-  orderAmount >= 100000 ? 0 : 3000;
+  orderAmount === 0 || orderAmount >= 100000 ? 0 : 3000;
 
 export const calcTotalAmount = (orderAmount: number, deliveryFee: number) =>
   orderAmount + deliveryFee;

@@ -1,4 +1,5 @@
 import type { Product } from "@/types/cartProduct";
+import ApiError from '@apis/apiError.ts';
 import CartHeading from "@components/common/entities/CartHeading";
 import CartList from "@components/common/entities/CartList";
 import CartOrderAmount from "@components/common/entities/CartOrderAmount";
@@ -22,11 +23,12 @@ import {
   calcTotalAmount,
   makeCheckedItem,
 } from "./libs/carts";
+import { useEffect } from 'react';
 
 export default function CartsSection() {
   const { data } = useCartQuery();
-  const { mutate: quantityMutate } = useCartQuantityUpdateMutation();
-  const { mutate: deleteMutate } = useCartItemDeleteMutation();
+  const { mutate: quantityMutate, error: quantityMutateError } = useCartQuantityUpdateMutation();
+  const { mutate: deleteMutate, error: deleteMutateError } = useCartItemDeleteMutation();
   const { navigate } = useOrderConfirmNavigate();
 
 	const isCheckedItemsSaved =  getCheckedItemsFromLocalStorage().length === 0
@@ -78,6 +80,22 @@ export default function CartsSection() {
       products: data.filter(({ product }) => isChecked(product.id)),
     });
   };
+
+	useEffect(() => {
+		if(quantityMutateError instanceof ApiError) {
+			alert(quantityMutateError.message)
+		} else {
+			alert('수량 변경 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+		}
+	}, [quantityMutateError]);
+
+	useEffect(() => {
+		if(deleteMutateError instanceof ApiError) {
+			alert(deleteMutateError.message)
+		} else {
+			alert('상품 삭제 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+		}
+	}, [deleteMutateError]);
 
   return (
     <ContentContainer>

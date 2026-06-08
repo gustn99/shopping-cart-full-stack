@@ -13,18 +13,21 @@ export default function useMutation<T, Args extends unknown[] = []>({
   onError,
 }: UseMutationParams<T, Args>) {
   const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<unknown>(null)
 
   const mutate = async (...args: Args) => {
     try {
       setIsLoading(true);
+			setError(null);
       const res = await mutateFn(...args);
       onSuccess?.(res);
     } catch (e) {
+			setError(e);
       onError?.(e);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { isLoading, mutate, invalidate: queryStore.invalidate };
+  return { isLoading,error, mutate, invalidate: queryStore.invalidate };
 }
