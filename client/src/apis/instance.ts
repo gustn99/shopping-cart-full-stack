@@ -3,8 +3,8 @@ import ApiError from "./apiError";
 const DEFAULT_ERROR_MESSAGE = "알 수 없는 오류가 발생했습니다.";
 
 interface ApiErrorBody {
-  code?: string;
-  message?: string;
+  errorCode?: string;
+  errorMessage?: string;
 }
 
 async function parseErrorBody(response: Response): Promise<ApiErrorBody> {
@@ -17,12 +17,12 @@ async function parseErrorBody(response: Response): Promise<ApiErrorBody> {
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const { code, message } = await parseErrorBody(response);
+    const { errorCode, errorMessage } = await parseErrorBody(response);
 
     throw new ApiError({
       status: response.status,
-      code,
-      message: message ?? DEFAULT_ERROR_MESSAGE,
+      code: errorCode,
+      message: errorMessage ?? DEFAULT_ERROR_MESSAGE,
     });
   }
 
