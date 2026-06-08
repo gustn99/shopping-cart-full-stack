@@ -15,7 +15,6 @@ import useCheckedItems from "@hooks/useCheckedItems";
 import useOrderConfirmNavigate from "@hooks/useOrderConfirmNavigate";
 import {
   getCheckedItemsFromLocalStorage,
-  removeCheckedItemsFromLocalStorage,
   setCheckedItemsToLocalStorage,
 } from "./libs/localStorage";
 import {
@@ -47,21 +46,17 @@ export default function CartsSection() {
 
   const handleSelectAll = () => {
     if (isAllChecked) {
-      removeCheckedItemsFromLocalStorage();
       return unselectAll();
     }
 
-    setCheckedItemsToLocalStorage(makeCheckedItem(data));
     data.forEach(({ product }) => select(product.id));
   };
 
   const handleSelect = (id: number) => {
     if (isChecked(id)) {
-      setCheckedItemsToLocalStorage(checkedItems.filter((item) => item !== id));
       return unselect(id);
     }
 
-    setCheckedItemsToLocalStorage([...checkedItems, id]);
     select(id);
   };
 
@@ -82,7 +77,11 @@ export default function CartsSection() {
     });
   };
 
-	useEffect(() => {
+	useEffect(function persistCheckedItems() {
+		setCheckedItemsToLocalStorage(checkedItems)
+	}, [checkedItems])
+
+	useEffect(function syncCartQuantityUpdateError() {
     if (!quantityMutateError) return;
 
 		if(quantityMutateError instanceof ApiError) {
@@ -93,7 +92,7 @@ export default function CartsSection() {
 		}
 	}, [quantityMutateError]);
 
-	useEffect(() => {
+	useEffect(function syncCartItemDeleteError() {
     if (!deleteMutateError) return;
 
 		if(deleteMutateError instanceof ApiError) {
