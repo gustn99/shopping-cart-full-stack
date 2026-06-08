@@ -1,3 +1,4 @@
+import { type CartsErrorCode, CARTS_ERROR_MESSAGES } from "@/constants/errorMessages";
 import type { Product } from "@/types/cartProduct";
 import ApiError from '@apis/apiError.ts';
 import CartHeading from "@components/common/entities/CartHeading";
@@ -82,18 +83,24 @@ export default function CartsSection() {
   };
 
 	useEffect(() => {
+    if (!quantityMutateError) return;
+
 		if(quantityMutateError instanceof ApiError) {
-			alert(quantityMutateError.message)
+			const message = CARTS_ERROR_MESSAGES[quantityMutateError.code as CartsErrorCode] ?? quantityMutateError.message;
+			alert(message)
 		} else {
-			alert('수량 변경 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+			alert(CARTS_ERROR_MESSAGES.DEFAULT)
 		}
 	}, [quantityMutateError]);
 
 	useEffect(() => {
+    if (!deleteMutateError) return;
+
 		if(deleteMutateError instanceof ApiError) {
-			alert(deleteMutateError.message)
+			const message = CARTS_ERROR_MESSAGES[deleteMutateError.code as CartsErrorCode] ?? deleteMutateError.message;
+			alert(message)
 		} else {
-			alert('상품 삭제 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+			alert(CARTS_ERROR_MESSAGES.DEFAULT)
 		}
 	}, [deleteMutateError]);
 
