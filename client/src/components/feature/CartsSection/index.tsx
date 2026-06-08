@@ -29,8 +29,8 @@ export default function CartsSection() {
   const { mutate: deleteMutate } = useCartItemDeleteMutation();
   const { navigate } = useOrderConfirmNavigate();
 
-	const isSavedCheckedItemsExist =  getCheckedItemsFromLocalStorage().length === 0
-  const initialCheckedItems = isSavedCheckedItemsExist ? makeCheckedItem(data) : getCheckedItemsFromLocalStorage();
+	const isCheckedItemsSaved =  getCheckedItemsFromLocalStorage().length === 0
+  const initialCheckedItems = isCheckedItemsSaved ? makeCheckedItem(data) : getCheckedItemsFromLocalStorage();
 
   const { checkedItems, select, unselect, unselectAll } =
     useCheckedItems<Product["id"]>(initialCheckedItems);
