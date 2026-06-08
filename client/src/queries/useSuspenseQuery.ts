@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { queryStore } from "@/queries/instance";
 interface UseQueryParams<T> {
   key: string;
@@ -9,10 +9,8 @@ export default function useSuspenseQuery<T>({
   key,
   queryFn,
 }: UseQueryParams<T>) {
-  const setFlush = useState(false)[1];
-
   const data = useSyncExternalStore<T | undefined>(
-    () => queryStore.subscribe(key, () => setFlush((prev) => !prev)),
+    (onStoreChange) => queryStore.subscribe(key, onStoreChange),
     () => queryStore.getSnapshot(key) as T | undefined,
   );
 
