@@ -1,5 +1,6 @@
 import type { Cart } from "@/types/cartProduct";
 import { useLocation, useNavigate } from "react-router";
+import { ROUTES } from "@constants/routes.ts";
 
 interface LocationState {
   products: Cart[];
@@ -11,7 +12,7 @@ export default function useOrderConfirmNavigate() {
   const loc = useLocation();
 
   const navigate = (state: LocationState) => {
-    nav("/order-confirm", { state });
+    nav(ROUTES.ORDER_CONFIRM, { state });
   };
 
   const getState = (): LocationState | null => {
