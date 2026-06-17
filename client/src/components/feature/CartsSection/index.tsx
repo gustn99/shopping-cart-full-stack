@@ -23,11 +23,10 @@ export default function CartsSection() {
   const { mutate: deleteMutate, error: deleteMutateError } = useCartItemDeleteMutation();
   const { navigate } = useOrderFormNavigate();
 
-	const isCheckedItemsSaved =  getCheckedItemsFromLocalStorage().length === 0
+  const isCheckedItemsSaved = getCheckedItemsFromLocalStorage().length === 0;
   const initialCheckedItems = isCheckedItemsSaved ? makeCheckedItem(data) : getCheckedItemsFromLocalStorage();
 
-  const { checkedItems, select, unselect, unselectAll } =
-    useCheckedItems<Product["id"]>(initialCheckedItems);
+  const { checkedItems, select, unselect, unselectAll } = useCheckedItems<Product["id"]>(initialCheckedItems);
 
   const isAllChecked = checkedItems.length === data.length;
   const isChecked = (id: number) => checkedItems.includes(id);
@@ -69,31 +68,40 @@ export default function CartsSection() {
     });
   };
 
-	useEffect(function persistCheckedItems() {
-		setCheckedItemsToLocalStorage(checkedItems)
-	}, [checkedItems])
+  useEffect(
+    function persistCheckedItems() {
+      setCheckedItemsToLocalStorage(checkedItems);
+    },
+    [checkedItems],
+  );
 
-	useEffect(function syncCartQuantityUpdateError() {
-    if (!quantityMutateError) return;
+  useEffect(
+    function syncCartQuantityUpdateError() {
+      if (!quantityMutateError) return;
 
-		if(quantityMutateError instanceof ApiError) {
-			const message = CARTS_ERROR_MESSAGES[quantityMutateError.code as CartsErrorCode] ?? quantityMutateError.message;
-			alert(message)
-		} else {
-			alert(CARTS_ERROR_MESSAGES.DEFAULT)
-		}
-	}, [quantityMutateError]);
+      if (quantityMutateError instanceof ApiError) {
+        const message = CARTS_ERROR_MESSAGES[quantityMutateError.code as CartsErrorCode] ?? quantityMutateError.message;
+        alert(message);
+      } else {
+        alert(CARTS_ERROR_MESSAGES.DEFAULT);
+      }
+    },
+    [quantityMutateError],
+  );
 
-	useEffect(function syncCartItemDeleteError() {
-    if (!deleteMutateError) return;
+  useEffect(
+    function syncCartItemDeleteError() {
+      if (!deleteMutateError) return;
 
-		if(deleteMutateError instanceof ApiError) {
-			const message = CARTS_ERROR_MESSAGES[deleteMutateError.code as CartsErrorCode] ?? deleteMutateError.message;
-			alert(message)
-		} else {
-			alert(CARTS_ERROR_MESSAGES.DEFAULT)
-		}
-	}, [deleteMutateError]);
+      if (deleteMutateError instanceof ApiError) {
+        const message = CARTS_ERROR_MESSAGES[deleteMutateError.code as CartsErrorCode] ?? deleteMutateError.message;
+        alert(message);
+      } else {
+        alert(CARTS_ERROR_MESSAGES.DEFAULT);
+      }
+    },
+    [deleteMutateError],
+  );
 
   return (
     <ContentContainer>
@@ -102,20 +110,8 @@ export default function CartsSection() {
       <Spacing size={2.25} />
       {data.length !== 0 ? (
         <>
-          <CartList
-            cartProducts={data}
-            checkedItems={checkedItems}
-            onSelectAll={handleSelectAll}
-            onSelect={handleSelect}
-            quantityRange={{ min: 1, max: 99 }}
-            onChangeQuantity={handleQuantityChange}
-            onDelete={handleDelete}
-          />
-          <CartOrderAmount
-            orderAmount={orderAmount}
-            deliveryFee={deliveryFee}
-            totalAmount={totalAmount}
-          />
+          <CartList cartProducts={data} checkedItems={checkedItems} onSelectAll={handleSelectAll} onSelect={handleSelect} quantityRange={{ min: 1, max: 99 }} onChangeQuantity={handleQuantityChange} onDelete={handleDelete} />
+          <CartOrderAmount orderAmount={orderAmount} deliveryFee={deliveryFee} totalAmount={totalAmount} />
         </>
       ) : (
         <EmptyCartContainer>
@@ -123,11 +119,7 @@ export default function CartsSection() {
         </EmptyCartContainer>
       )}
       <PositionBottom>
-        <Button
-          fullWidth
-          disabled={checkedItems.length === 0}
-          onClick={handleConfirm}
-        >
+        <Button fullWidth disabled={checkedItems.length === 0} onClick={handleConfirm}>
           주문 확인
         </Button>
       </PositionBottom>
