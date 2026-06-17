@@ -6,7 +6,8 @@ export default function OrderFormPage() {
   return (
     <>
       {/* 상품 리스트 */}
-      <ul>
+      <ul aria-label="상품 리스트">
+        <li>상품 이름, 가격, 수량</li>
         <li>상품 이름, 가격, 수량</li>
       </ul>
 
@@ -19,21 +20,39 @@ export default function OrderFormPage() {
         제주도 및 도서 산간 지역
       </label>
 
+      {/* 주문 summary */}
+      <div data-testid="order-summary">결제 금액</div>
+
       {/* 결제하기 버튼 */}
       <button>결제하기</button>
 
       {/* 쿠폰 모달 */}
-      <dialog open={isOpen} onClose={() => setIsOpen(false)}>
+      <dialog open={isOpen} onClose={() => setIsOpen(false)} aria-label="쿠폰">
         <h2>쿠폰</h2>
-        <ul>
+        <button onClick={() => setIsOpen(false)} aria-label="닫기">
+          X
+        </button>
+        <ul aria-label="쿠폰 리스트">
           <li>
             <label>
               <input type="checkbox" />
               쿠폰1
             </label>
           </li>
+          <li>
+            <label>
+              <input type="checkbox" />
+              쿠폰2
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" />
+              쿠폰3
+            </label>
+          </li>
         </ul>
-        <button onClick={() => setIsOpen(false)}>쿠폰 사용하기</button>
+        <button onClick={() => setIsOpen(false)}>쿠폰 사용</button>
       </dialog>
     </>
   );

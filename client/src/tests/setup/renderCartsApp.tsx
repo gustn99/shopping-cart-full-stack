@@ -1,6 +1,7 @@
 import { ROUTES } from "@constants/routes";
 import CartsPage from "@pages/CartsPage";
 import OrderConfirmPage from "@pages/OrderConfirmPage";
+import OrderFormPage from "@pages/OrderFormPage";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Navigate, Route, Routes } from "react-router";
@@ -19,6 +20,7 @@ export function renderCartsApp(initialPath: string = ROUTES.CARTS) {
         <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
         <Route path={ROUTES.CARTS} element={<CartsPage />} />
         <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
+        <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
       </Routes>
     </MemoryRouter>,
   );
