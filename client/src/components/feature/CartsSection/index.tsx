@@ -1,6 +1,6 @@
 import { type CartsErrorCode, CARTS_ERROR_MESSAGES } from "@/constants/errorMessages";
 import type { Product } from "@/types/cartProduct";
-import ApiError from '@apis/apiError.ts';
+import ApiError from "@apis/apiError.ts";
 import CartHeading from "@components/common/entities/CartHeading";
 import CartList from "@components/common/entities/CartList";
 import CartOrderAmount from "@components/common/entities/CartOrderAmount";
@@ -12,24 +12,16 @@ import useCartItemDeleteMutation from "@hooks/useCartItemDeleteMutation";
 import useCartQuantityUpdateMutation from "@hooks/useCartQuantityUpdateMutation";
 import useCartQuery from "@hooks/useCartQuery";
 import useCheckedItems from "@hooks/useCheckedItems";
-import useOrderConfirmNavigate from "@hooks/useOrderConfirmNavigate";
-import {
-  getCheckedItemsFromLocalStorage,
-  setCheckedItemsToLocalStorage,
-} from "./libs/localStorage";
-import {
-  calcDeliveryFee,
-  calcOrderAmount,
-  calcTotalAmount,
-  makeCheckedItem,
-} from "./libs/carts";
-import { useEffect } from 'react';
+import useOrderFormNavigate from "@hooks/useOrderFormNavigate.ts";
+import { getCheckedItemsFromLocalStorage, setCheckedItemsToLocalStorage } from "./libs/localStorage";
+import { calcDeliveryFee, calcOrderAmount, calcTotalAmount, makeCheckedItem } from "./libs/carts";
+import { useEffect } from "react";
 
 export default function CartsSection() {
   const { data } = useCartQuery();
   const { mutate: quantityMutate, error: quantityMutateError } = useCartQuantityUpdateMutation();
   const { mutate: deleteMutate, error: deleteMutateError } = useCartItemDeleteMutation();
-  const { navigate } = useOrderConfirmNavigate();
+  const { navigate } = useOrderFormNavigate();
 
 	const isCheckedItemsSaved =  getCheckedItemsFromLocalStorage().length === 0
   const initialCheckedItems = isCheckedItemsSaved ? makeCheckedItem(data) : getCheckedItemsFromLocalStorage();
