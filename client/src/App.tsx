@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 
 import CartsPage from "@pages/CartsPage";
 import OrderConfirmPage from "@pages/OrderConfirmPage";
+import OrderFormPage from "@pages/OrderFormPage";
 import { ROUTES } from "@constants/routes";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
         <Route path={ROUTES.CARTS} element={<CartsPage />} />
         <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
+        <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
       </Routes>
     </BrowserRouter>
   );
