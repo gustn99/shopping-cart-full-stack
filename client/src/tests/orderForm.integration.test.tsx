@@ -2,6 +2,8 @@ import { screen, within } from "@testing-library/react";
 import { renderCartsApp } from "./setup/renderCartsApp";
 import { ROUTES } from "@constants/routes";
 
+// TODO: 대상 요소를 변수로 선언할 건지 인라인으로 넘길 건지 통일
+
 describe("OrderFormPage", () => {
   describe("진입 및 렌더링", () => {
     it("/carts에서 주문 확인 클릭 시 /order-form으로 이동하고 상품 목록과 주문 summary를 렌더링한다", async () => {
@@ -70,39 +72,42 @@ describe("OrderFormPage", () => {
       const { user } = renderCartsApp(ROUTES.ORDER_FORM);
       await user.click(screen.getByRole("button", { name: /쿠폰 적용/ }));
 
+      const dialog = screen.getByRole("dialog", { name: /쿠폰/ });
       const useButton = screen.getByRole("button", { name: /쿠폰 사용/ });
       await user.click(useButton);
 
-      expect(screen.queryByRole("dialog", { name: /쿠폰/ })).not.toBeVisible();
+      expect(dialog).not.toBeVisible();
     });
 
     it("모달 내 x 버튼 클릭 시 모달이 닫힌다", async () => {
       const { user } = renderCartsApp(ROUTES.ORDER_FORM);
       await user.click(screen.getByRole("button", { name: /쿠폰 적용/ }));
 
+      const dialog = screen.getByRole("dialog", { name: /쿠폰/ });
       const closeButton = screen.getByRole("button", { name: /닫기/ });
       await user.click(closeButton);
 
-      expect(screen.queryByRole("dialog", { name: /쿠폰/ })).not.toBeVisible();
+      expect(dialog).not.toBeVisible();
     });
 
     it("esc 입력 시 모달이 닫힌다", async () => {
       const { user } = renderCartsApp(ROUTES.ORDER_FORM);
       await user.click(screen.getByRole("button", { name: /쿠폰 적용/ }));
 
+      const dialog = screen.getByRole("dialog", { name: /쿠폰/ });
       await user.keyboard("{Escape}");
 
-      expect(screen.queryByRole("dialog", { name: /쿠폰/ })).not.toBeVisible();
+      expect(dialog).not.toBeVisible();
     });
 
     it("모달 외부 클릭 시 모달이 닫힌다", async () => {
       const { user } = renderCartsApp(ROUTES.ORDER_FORM);
       await user.click(screen.getByRole("button", { name: /쿠폰 적용/ }));
 
-      // dialog 외부(body 등) 클릭
-      await user.click(document.body);
+      const dialog = screen.getByRole("dialog", { name: /쿠폰/ });
+      await user.click(dialog);
 
-      expect(screen.queryByRole("dialog", { name: /쿠폰/ })).not.toBeVisible();
+      expect(dialog).not.toBeVisible();
     });
   });
 
