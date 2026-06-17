@@ -1,11 +1,10 @@
 import CouponModal from "@components/feature/CouponModal";
-import { ROUTES } from "@constants/routes.ts";
+import useOrderCompleteNavigate from "@hooks/useOrderCompleteNavigate.ts";
 import { useRef } from "react";
-import { useNavigate } from "react-router";
 
 export default function OrderFormPage() {
   const modalRef = useRef<HTMLDialogElement>(null);
-  const navigate = useNavigate();
+  const { navigate } = useOrderCompleteNavigate();
 
   return (
     <>
@@ -28,7 +27,7 @@ export default function OrderFormPage() {
       <div data-testid="order-summary">결제 금액</div>
 
       {/* 결제하기 버튼 */}
-      <button onClick={() => navigate(ROUTES.ORDER_COMPLETE)}>결제하기</button>
+      <button onClick={() => navigate()}>결제하기</button>
 
       {/* 쿠폰 모달 */}
       <CouponModal modalRef={modalRef} />
