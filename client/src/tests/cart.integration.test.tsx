@@ -7,6 +7,7 @@ import {
   server,
 } from "./setup/server";
 import { renderCartsApp } from "./setup/renderCartsApp";
+import { ROUTES } from "@constants/routes.ts";
 
 /**
  * 장바구니 통합 테스트 (RTL + MSW + Jest)
@@ -188,7 +189,9 @@ describe("가격 동기화", () => {
     await user.click(minus); // 러닝화 2 → 1 (서버 반영 후 재조회)
 
     await waitFor(() => {
-      expect(within(getItemRow(PRODUCT.shoes)).getByText("1")).toBeInTheDocument();
+      expect(
+        within(getItemRow(PRODUCT.shoes)).getByText("1"),
+      ).toBeInTheDocument();
       // 129,000×1 + 89,000×1 = 218,000
       expect(getAmountByLabel("총 주문 금액")).toBe("218,000원");
       expect(getAmountByLabel("총 결제 금액")).toBe("218,000원");
@@ -263,28 +266,20 @@ describe("주문 확인 버튼", () => {
     expect(getConfirmButton()).toBeDisabled();
   });
 
-  it("주문 확인 클릭 시 선택한 상품 종류 수/총 수량/총 금액 문구가 표시된다", async () => {
-    const { user } = renderCartsApp();
-    await waitForCartLoaded(); // 전체 선택 상태
+  it("주문 확인 버튼 클릭 시 /order-form으로 이동하고 상품 목록과 주문 summary를 렌더링한다", async () => {
+    const { user } = renderCartsApp(ROUTES.CARTS);
 
-    await user.click(getConfirmButton());
+    // 장바구니 로드 대기
+    await screen.findByText("무선 헤드폰");
 
-    // 헤드폰 1개 + 러닝화 2개 = 2종류 3개
+    const confirmButton = screen.getByRole("button", { name: "주문 확인" });
+    await user.click(confirmButton);
+
+    // /order-form 이동 확인 및 렌더링 확인
     expect(
-      await screen.findByText("총 2종류의 상품 3개를 주문합니다."),
+      screen.getByRole("list", { name: /상품 리스트/ }),
     ).toBeInTheDocument();
-    expect(screen.getByText("307,000원")).toBeInTheDocument();
-  });
-
-  it('주문 확인 페이지의 "결제하기" 버튼은 항상 비활성화되어 있다', async () => {
-    const { user } = renderCartsApp();
-    await waitForCartLoaded();
-
-    await user.click(getConfirmButton());
-
-    expect(
-      await screen.findByRole("button", { name: "결제하기" }),
-    ).toBeDisabled();
+    expect(screen.getByTestId("order-summary")).toBeInTheDocument();
   });
 });
 

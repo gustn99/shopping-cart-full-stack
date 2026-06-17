@@ -5,24 +5,6 @@ import { ROUTES } from "@constants/routes";
 // TODO: 대상 요소를 변수로 선언할 건지 인라인으로 넘길 건지 통일
 
 describe("OrderFormPage", () => {
-  describe("진입 및 렌더링", () => {
-    it("/carts에서 주문 확인 클릭 시 /order-form으로 이동하고 상품 목록과 주문 summary를 렌더링한다", async () => {
-      const { user } = renderCartsApp(ROUTES.CARTS);
-
-      // 장바구니 로드 대기
-      await screen.findByText("무선 헤드폰");
-
-      const confirmButton = screen.getByRole("button", { name: "주문 확인" });
-      await user.click(confirmButton);
-
-      // /order-form 이동 확인 및 렌더링 확인
-      expect(
-        screen.getByRole("list", { name: /상품 리스트/ }),
-      ).toBeInTheDocument();
-      expect(screen.getByTestId("order-summary")).toBeInTheDocument();
-    });
-  });
-
   describe("쿠폰 모달", () => {
     it("쿠폰 적용 버튼 클릭 시 쿠폰 모달이 렌더링된다", async () => {
       const { user } = renderCartsApp(ROUTES.ORDER_FORM);
