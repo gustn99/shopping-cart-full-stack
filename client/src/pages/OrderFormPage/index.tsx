@@ -1,16 +1,8 @@
-import { useState } from "react";
-import useCheckedItems from "@hooks/useCheckedItems.ts";
+import CouponModal from "@components/feature/CouponModal";
+import { useRef } from "react";
 
 export default function OrderFormPage() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { checkedItems, select, unselect } = useCheckedItems<number>();
-  const isChecked = (id: number) => checkedItems.includes(id);
-  const canCheckMore = checkedItems.length < 2;
-
-  const handleCouponToggle = (id: number) => {
-    if (isChecked(id)) return unselect(id);
-    select(id);
-  };
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   return (
     <>
@@ -21,7 +13,7 @@ export default function OrderFormPage() {
       </ul>
 
       {/* 쿠폰 적용 버튼 */}
-      <button onClick={() => setIsOpen(true)}>쿠폰 적용</button>
+      <button onClick={() => modalRef.current?.showModal()}>쿠폰 적용</button>
 
       {/* 배송 정보 */}
       <label>
@@ -36,28 +28,7 @@ export default function OrderFormPage() {
       <button>결제하기</button>
 
       {/* 쿠폰 모달 */}
-      <dialog open={isOpen} onClose={() => setIsOpen(false)} aria-label="쿠폰">
-        <h2>쿠폰</h2>
-        <button onClick={() => setIsOpen(false)} aria-label="닫기">
-          X
-        </button>
-        <ul aria-label="쿠폰 리스트">
-          {[0, 1, 2].map((id, index) => (
-            <li key={id}>
-              <label>
-                <input
-                  type="checkbox"
-                  disabled={!canCheckMore && !isChecked(id)}
-                  checked={isChecked(id)}
-                  onChange={() => handleCouponToggle(id)}
-                />
-                쿠폰{index + 1}
-              </label>
-            </li>
-          ))}
-        </ul>
-        <button onClick={() => setIsOpen(false)}>쿠폰 사용</button>
-      </dialog>
+      <CouponModal modalRef={modalRef} />
     </>
   );
 }
