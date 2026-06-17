@@ -1,7 +1,16 @@
 import { useState } from "react";
+import useCheckedItems from "@hooks/useCheckedItems.ts";
 
 export default function OrderFormPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const { checkedItems, select, unselect } = useCheckedItems<number>();
+  const isChecked = (id: number) => checkedItems.includes(id);
+  const canCheckMore = checkedItems.length < 2;
+
+  const handleCouponToggle = (id: number) => {
+    if (isChecked(id)) return unselect(id);
+    select(id);
+  };
 
   return (
     <>
@@ -33,24 +42,19 @@ export default function OrderFormPage() {
           X
         </button>
         <ul aria-label="쿠폰 리스트">
-          <li>
-            <label>
-              <input type="checkbox" />
-              쿠폰1
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" />
-              쿠폰2
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" />
-              쿠폰3
-            </label>
-          </li>
+          {[0, 1, 2].map((id, index) => (
+            <li key={id}>
+              <label>
+                <input
+                  type="checkbox"
+                  disabled={!canCheckMore && !isChecked(id)}
+                  checked={isChecked(id)}
+                  onChange={() => handleCouponToggle(id)}
+                />
+                쿠폰{index + 1}
+              </label>
+            </li>
+          ))}
         </ul>
         <button onClick={() => setIsOpen(false)}>쿠폰 사용</button>
       </dialog>
