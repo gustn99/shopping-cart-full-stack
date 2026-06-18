@@ -7,6 +7,7 @@ import CartOrderAmount from "@components/common/entities/CartOrderAmount";
 import Button from "@components/common/shared/Button";
 import PositionBottom from "@components/common/shared/PositionBottom";
 import Spacing from "@components/common/shared/Spacing";
+import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
 import useCartItemDeleteMutation from "@hooks/useCartItemDeleteMutation";
 import useCartQuantityUpdateMutation from "@hooks/useCartQuantityUpdateMutation";
@@ -123,7 +124,9 @@ export default function CartsSection() {
         </>
       ) : (
         <EmptyCartContainer>
-          <EmptyCartText>장바구니에 담은 상품이 없습니다.</EmptyCartText>
+          <Text typograph="body1" as="p">
+            장바구니에 담은 상품이 없습니다.
+          </Text>
         </EmptyCartContainer>
       )}
       <PositionBottom>
@@ -149,10 +152,4 @@ const EmptyCartContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-`;
-
-const EmptyCartText = styled.p`
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 16px;
 `;

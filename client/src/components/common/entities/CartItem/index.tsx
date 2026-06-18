@@ -3,6 +3,7 @@ import plus from "@assets/plus.svg";
 import Spacing from "@components/common/shared/Spacing";
 import CheckBox from "@components/common/shared/CheckBox";
 import Divider from "@components/common/shared/Divider";
+import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
 import { COLOR_PALETTE } from "@styles/colorPalette";
 
@@ -47,8 +48,12 @@ export default function CartItem({
         <CartItemImg src={image} alt={name} />
         <CartItemInfoWrapper>
           <ProductInfoWrapper>
-            <CartItemName>{name}</CartItemName>
-            <CartItemPrice>{price.toLocaleString()}원</CartItemPrice>
+            <Text typograph="caption" as="p">
+              {name}
+            </Text>
+            <Text typograph="heading" as="p">
+              {price.toLocaleString()}원
+            </Text>
           </ProductInfoWrapper>
           <QuantityWrapper>
             <QuantityButton
@@ -56,7 +61,11 @@ export default function CartItem({
               disabled={quantity <= quantityRange.min}
               onClick={() => onChangeQuantity(Math.max(1, quantity - 1))}
             />
-            <Quantity>{quantity}</Quantity>
+            <Quantity>
+              <Text typograph="caption" as="span">
+                {quantity}
+              </Text>
+            </Quantity>
             <QuantityButton
               src={plus}
               disabled={quantity >= quantityRange.max}
@@ -103,7 +112,7 @@ const CartItemImg = styled.img`
   border-radius: 0.5rem;
   border: none;
   background-color: ${COLOR_PALETTE["image-placeholder"]};
-	object-fit: cover;
+  object-fit: cover;
 `;
 
 const CartItemInfoWrapper = styled.div`
@@ -116,18 +125,6 @@ const ProductInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-`;
-
-const CartItemName = styled.p`
-  font-weight: 500;
-  font-size: 0.75rem;
-  line-height: 0.9375rem;
-`;
-
-const CartItemPrice = styled.p`
-  font-weight: 700;
-  font-size: 1.5rem;
-  line-height: 100%;
 `;
 
 const QuantityWrapper = styled.div`
@@ -158,9 +155,7 @@ const QuantityButton = styled.button<{ src: string }>`
   }
 `;
 
-const Quantity = styled.span`
-  font-weight: 500;
-  font-size: 0.75rem;
+const Quantity = styled.div`
   width: 1.5rem;
   text-align: center;
 `;

@@ -1,5 +1,6 @@
 import Button from "@components/common/shared/Button";
 import Spacing from "@components/common/shared/Spacing";
+import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
 import { COLOR_PALETTE } from "@styles/colorPalette";
 
@@ -27,9 +28,13 @@ export default function ErrorFallback({
     <ErrorFallbackContainer role="alert">
       <ErrorIcon aria-hidden>!</ErrorIcon>
       <Spacing size={1.5} />
-      <ErrorTitle>{title}</ErrorTitle>
+      <Text typograph="heading2" as="h2">
+        {title}
+      </Text>
       <Spacing size={0.5} />
-      <ErrorDescription>{description}</ErrorDescription>
+      <Text typograph="body2" as="p" color="disabled">
+        {description}
+      </Text>
       <Spacing size={2} />
       <ButtonWrapper>
         <Button fullWidth onClick={handleRetry}>
@@ -61,19 +66,6 @@ const ErrorIcon = styled.div`
   border: 2px solid ${COLOR_PALETTE.border};
   font-size: 1.5rem;
   font-weight: 700;
-`;
-
-const ErrorTitle = styled.h2`
-  font-weight: 700;
-  font-size: 1.25rem;
-  line-height: 1.5rem;
-`;
-
-const ErrorDescription = styled.p`
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: ${COLOR_PALETTE.disabled};
 `;
 
 const ButtonWrapper = styled.div`
