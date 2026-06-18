@@ -7,6 +7,8 @@ import CouponModal from "@components/feature/CouponModal";
 import GoBackButton from "@components/feature/GoBackButton";
 import useOrderCompleteNavigate from "@hooks/useOrderCompleteNavigate.ts";
 import { useRef } from "react";
+import Text from "@components/common/shared/Text";
+import styled from "@emotion/styled";
 
 export default function OrderFormPage() {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -34,17 +36,28 @@ export default function OrderFormPage() {
   );
 }
 
-function OrderFormHeading() {
-  // 상품 리스트 조회
+export function OrderFormHeading() {
+  // 주문 조회
 
   return (
-    <div>
-      <h2>주문 확인</h2>
-      <p>총 1종류의 상품 2개를 주문합니다.</p>
-      <p>최종 결제 금액을 확인해 주세요.</p>
-    </div>
+    <OrderFormHeadingContainer>
+      <Text typograph="heading1" as="h2">
+        주문 확인
+      </Text>
+      <Text typograph="caption" as="p">
+        총 1종류의 상품 2개를 주문합니다.
+        <br />
+        최종 결제 금액을 확인해 주세요.
+      </Text>
+    </OrderFormHeadingContainer>
   );
 }
+
+const OrderFormHeadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
 
 function ProductListSection() {
   // 상품 리스트 조회
