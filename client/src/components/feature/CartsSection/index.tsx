@@ -110,7 +110,15 @@ export default function CartsSection() {
       <Spacing size={2.25} />
       {data.length !== 0 ? (
         <>
-          <CartList cartProducts={data} checkedItems={checkedItems} onSelectAll={handleSelectAll} onSelect={handleSelect} quantityRange={{ min: 1, max: 99 }} onChangeQuantity={handleQuantityChange} onDelete={handleDelete} />
+          <CartList
+            cartProducts={data}
+            checkedItems={checkedItems}
+            onSelectAll={handleSelectAll}
+            onSelect={handleSelect}
+            quantityRange={{ min: 1, max: 99 }}
+            onChangeQuantity={handleQuantityChange}
+            onDelete={handleDelete}
+          />
           <CartOrderAmount orderAmount={orderAmount} deliveryFee={deliveryFee} totalAmount={totalAmount} />
         </>
       ) : (
