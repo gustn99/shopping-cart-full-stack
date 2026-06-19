@@ -51,7 +51,7 @@ export default function CartItem({
             <Text typograph="caption" as="p">
               {name}
             </Text>
-            <Text typograph="heading" as="p">
+            <Text typograph="heading1" as="p">
               {price.toLocaleString()}원
             </Text>
           </ProductInfoWrapper>
