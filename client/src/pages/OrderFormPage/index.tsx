@@ -24,7 +24,9 @@ export default function OrderFormPage() {
         <OrderFormHeading />
         <ProductListSection />
 
-        <Button onClick={() => modalRef.current?.showModal()}>쿠폰 적용</Button>
+        <Button fullWidth rounded variant="outline" size="md" onClick={() => modalRef.current?.showModal()}>
+          쿠폰 적용
+        </Button>
 
         <DeliverySection />
         <OrderSummarySection />
