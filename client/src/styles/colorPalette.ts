@@ -1,5 +1,6 @@
 export const COLOR_PALETTE = {
   black: "#000000",
+  gray: "#333333BF",
   white: "#ffffff",
   border: "#0000001A",
   disabled: "#BEBEBE",
