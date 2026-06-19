@@ -1,5 +1,6 @@
 import minus from "@assets/minus.svg";
 import plus from "@assets/plus.svg";
+import ProductImg from "@components/common/entities/ProductImg";
 import Spacing from "@components/common/shared/Spacing";
 import CheckBox from "@components/common/shared/CheckBox";
 import Divider from "@components/common/shared/Divider";
@@ -44,8 +45,9 @@ export default function CartItem({
         <DeleteButton onClick={onDelete}>삭제</DeleteButton>
       </ActionButtonWrapper>
       <Spacing size={0.75} />
+
       <CartItemInfoContainer>
-        <CartItemImg src={image} alt={name} />
+        <ProductImg src={image} alt={name} />
         <CartItemInfoWrapper>
           <ProductInfoWrapper>
             <Text typograph="caption" as="p">
@@ -104,15 +106,6 @@ const CartItemInfoContainer = styled.div`
   display: flex;
   gap: 1.5rem;
   align-items: center;
-`;
-
-const CartItemImg = styled.img`
-  width: 7rem;
-  aspect-ratio: 1/1;
-  border-radius: 0.5rem;
-  border: none;
-  background-color: ${COLOR_PALETTE["image-placeholder"]};
-  object-fit: cover;
 `;
 
 const CartItemInfoWrapper = styled.div`
