@@ -18,7 +18,7 @@ const TYPOGRAPH_MAP = {
 
 const TEXT_COLOR_MAP = {
   solid: COLOR_PALETTE.white,
-  outline: COLOR_PALETTE.gray,
+  outline: COLOR_PALETTE["gray-300"],
 } as const;
 
 const BG_COLOR_MAP = {
