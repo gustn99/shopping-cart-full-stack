@@ -9,7 +9,7 @@ export default function ProductListSection() {
   // 상품 리스트 조회
 
   return (
-    <ul aria-label="상품 리스트">
+    <OrderList as="ul" direction="column" gap={20} aria-label="상품 리스트">
       {[
         { id: 1, name: "ㅁㄴㅇㄹ", price: 10000, quantity: 2, image: "" },
         { id: 2, name: "ㅂㅈㄷㄱ", price: 10000, quantity: 2, image: "" },
@@ -37,9 +37,11 @@ export default function ProductListSection() {
           </Flex>
         </OrderItemContainer>
       ))}
-    </ul>
+    </OrderList>
   );
 }
+
+const OrderList = styled(Flex)``;
 
 const OrderItemContainer = styled.li``;
 

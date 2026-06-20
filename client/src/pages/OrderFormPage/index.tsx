@@ -11,6 +11,7 @@ import OrderSummarySection from "@components/feature/OrderSummarySection";
 import PaymentButton from "@components/feature/PaymentButton.tsx";
 import ProductListSection from "@components/feature/ProductListSection";
 import { useRef } from "react";
+import styled from "@emotion/styled";
 
 export default function OrderFormPage() {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -20,20 +21,25 @@ export default function OrderFormPage() {
       <PageLayout>
         <Header LeftComponent={<GoBackButton />} />
 
-        <OrderFormHeading />
-        <ProductListSection />
+        <OrderFormPageWrapper>
+          <Spacing size={2.25} />
+          <OrderFormHeading />
+          <Spacing size={2.25} />
 
-        <Button fullWidth rounded variant="outline" size="md" onClick={() => modalRef.current?.showModal()}>
-          쿠폰 적용
-        </Button>
-
-        <DeliverySection />
-        <OrderSummarySection />
+          <ProductListSection />
+          <Spacing size={2} />
+          <Button fullWidth rounded variant="outline" size="md" onClick={() => modalRef.current?.showModal()}>
+            쿠폰 적용
+          </Button>
+          <Spacing size={2} />
+          <DeliverySection />
+          <Spacing size={2} />
+          <OrderSummarySection />
+        </OrderFormPageWrapper>
 
         <PositionBottom>
           <PaymentButton />
         </PositionBottom>
-
         <Spacing size={7} />
       </PageLayout>
 
@@ -41,3 +47,7 @@ export default function OrderFormPage() {
     </>
   );
 }
+
+const OrderFormPageWrapper = styled.div`
+  padding-inline: 24px;
+`;
