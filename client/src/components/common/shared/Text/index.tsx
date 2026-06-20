@@ -32,28 +32,15 @@ const TYPOGRAPHY = {
 
 export type TypographyVariant = keyof typeof TYPOGRAPHY;
 
-interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
-  children: React.ReactNode;
+interface TextStyleProps {
   typograph?: TypographyVariant;
   color?: keyof typeof COLOR_PALETTE | (string & {});
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div";
 }
 
-export default function Text({ children, as, typograph = "body1", color = "black", ...props }: TextProps) {
-  const Component = as || "span";
-
-  return (
-    <StyledText as={Component} typograph={typograph} color={color} {...props}>
-      {children}
-    </StyledText>
-  );
-}
-
-const StyledText = styled.span<{
-  typograph: TypographyVariant;
-  color: string;
-}>`
-  ${({ typograph }) => TYPOGRAPHY[typograph]}
-  color: ${({ color }) => COLOR_PALETTE[color as keyof typeof COLOR_PALETTE] || color};
+const Text = styled.span<TextStyleProps>`
+  ${({ typograph = "body1" }) => TYPOGRAPHY[typograph]}
+  color: ${({ color = "black" }) => COLOR_PALETTE[color as keyof typeof COLOR_PALETTE] || color};
   vertical-align: middle;
 `;
+
+export default Text;
