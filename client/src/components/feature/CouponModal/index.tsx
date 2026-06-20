@@ -1,3 +1,4 @@
+import CouponItem from "@components/feature/CouponItem";
 import useCheckedItems from "@hooks/useCheckedItems.ts";
 
 interface CouponModalProps {
@@ -6,10 +7,12 @@ interface CouponModalProps {
 
 export default function CouponModal({ modalRef }: CouponModalProps) {
   const { checkedItems, select, unselect } = useCheckedItems<number>();
-  const isChecked = (id: number) => checkedItems.includes(id);
   const canCheckMore = checkedItems.length < 2;
+  const isChecked = (id: number) => checkedItems.includes(id);
+  const isDisabled = (id: number) => !canCheckMore && !isChecked(id);
 
   const handleCouponToggle = (id: number) => {
+    if (isDisabled(id)) return;
     if (isChecked(id)) return unselect(id);
     select(id);
   };
@@ -29,18 +32,13 @@ export default function CouponModal({ modalRef }: CouponModalProps) {
         X
       </button>
       <ul aria-label="쿠폰 리스트">
-        {[0, 1, 2].map((id, index) => (
-          <li key={id}>
-            <label>
-              <input
-                type="checkbox"
-                disabled={!canCheckMore && !isChecked(id)}
-                checked={isChecked(id)}
-                onChange={() => handleCouponToggle(id)}
-              />
-              쿠폰{index + 1}
-            </label>
-          </li>
+        {[0, 1, 2].map((id) => (
+          <CouponItem
+            key={id}
+            disabled={isDisabled(id)}
+            checked={isChecked(id)}
+            onSelect={() => handleCouponToggle(id)}
+          />
         ))}
       </ul>
       <button onClick={handleClose}>쿠폰 사용</button>
