@@ -8,6 +8,7 @@ import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
 import useCheckedItems from "@hooks/useCheckedItems.ts";
 import { COLOR_PALETTE } from "@styles/colorPalette.ts";
+import { useEffect } from "react";
 
 interface CouponModalProps {
   modalRef: React.RefObject<HTMLDialogElement | null>;
@@ -25,13 +26,22 @@ export default function CouponModal({ modalRef }: CouponModalProps) {
     select(id);
   };
 
-  const handleClose = () => modalRef.current?.close();
+  const handleClose = () => {
+    modalRef.current?.close();
+    document.body.style.overflowY = "";
+  };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
   };
+
+  useEffect(() => {
+    return () => {
+      document.body.style.overflowY = "";
+    };
+  }, []);
 
   return (
     <CouponModalContainer ref={modalRef} onClick={handleBackdropClick} aria-label="쿠폰">

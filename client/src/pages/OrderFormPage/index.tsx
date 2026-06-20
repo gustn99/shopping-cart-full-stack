@@ -28,7 +28,16 @@ export default function OrderFormPage() {
 
           <ProductListSection />
           <Spacing size={2} />
-          <Button fullWidth rounded variant="outline" size="md" onClick={() => modalRef.current?.showModal()}>
+          <Button
+            fullWidth
+            rounded
+            variant="outline"
+            size="md"
+            onClick={() => {
+              modalRef.current?.showModal();
+              document.body.style.overflowY = "hidden";
+            }}
+          >
             쿠폰 적용
           </Button>
           <Spacing size={2} />
