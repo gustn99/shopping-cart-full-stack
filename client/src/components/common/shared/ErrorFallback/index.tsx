@@ -1,4 +1,5 @@
 import Button from "@components/common/shared/Button";
+import Flex from "@components/common/shared/Flex";
 import Spacing from "@components/common/shared/Spacing";
 import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
@@ -25,8 +26,8 @@ export default function ErrorFallback({
   };
 
   return (
-    <ErrorFallbackContainer role="alert">
-      <ErrorIcon aria-hidden>!</ErrorIcon>
+    <ErrorFallbackContainer role="alert" direction="column" align="center" justify="center">
+      <ErrorIcon aria-hidden align="center" justify="center">!</ErrorIcon>
       <Spacing size={1.5} />
       <Text typograph="heading2" as="h2">
         {title}
@@ -45,20 +46,13 @@ export default function ErrorFallback({
   );
 }
 
-const ErrorFallbackContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const ErrorFallbackContainer = styled(Flex)`
   flex: 1;
   padding: 4rem 1.5rem;
   text-align: center;
 `;
 
-const ErrorIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const ErrorIcon = styled(Flex)`
   width: 3rem;
   height: 3rem;
   border-radius: 50%;

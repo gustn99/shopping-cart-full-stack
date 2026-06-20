@@ -1,9 +1,9 @@
 import CartItem from "@components/common/entities/CartItem";
 import CheckBox from "@components/common/shared/CheckBox";
-import type { Cart, Product } from "@/types/cartProduct";
+import Flex from "@components/common/shared/Flex";
+import Text from "@components/common/shared/Text";
+import type { Cart, Product, QuantityRange } from "@/types/cartProduct";
 import Spacing from "@components/common/shared/Spacing";
-import styled from "@emotion/styled";
-import type { QuantityRange } from "@/types/cartProduct";
 
 interface CartListProps {
   cartProducts: Cart[];
@@ -25,16 +25,13 @@ export default function CartList({
   onSelectAll,
 }: CartListProps) {
   return (
-    <CartListContainer>
-      <SelectAllWrapper>
-        <CheckBox
-          checked={checkedItems.length === cartProducts.length}
-          onChange={() => onSelectAll()}
-        />
-        전체선택
-      </SelectAllWrapper>
+    <Flex direction="column">
+      <Flex as="label" gap={8} align="center">
+        <CheckBox checked={checkedItems.length === cartProducts.length} onChange={() => onSelectAll()} />
+        <Text typograph="caption">전체선택</Text>
+      </Flex>
       <Spacing size={1.25} />
-      <CartListWrapper>
+      <Flex as="ul" direction="column" gap={20}>
         {cartProducts.map(({ product, quantity }) => (
           <CartItem
             key={product.id}
@@ -44,33 +41,11 @@ export default function CartList({
             onSelect={() => onSelect(product.id)}
             onDelete={() => onDelete(product.id)}
             quantityRange={quantityRange}
-            onChangeQuantity={(newQuantity) =>
-              onChangeQuantity(product.id, newQuantity)
-            }
+            onChangeQuantity={(newQuantity) => onChangeQuantity(product.id, newQuantity)}
           />
         ))}
-      </CartListWrapper>
+      </Flex>
       <Spacing size={3.25} />
-    </CartListContainer>
+    </Flex>
   );
 }
-
-const CartListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SelectAllWrapper = styled.label`
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  font-weight: 500;
-  font-size: 0.75rem;
-  line-height: 0.9375rem;
-`;
-
-const CartListWrapper = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-`;

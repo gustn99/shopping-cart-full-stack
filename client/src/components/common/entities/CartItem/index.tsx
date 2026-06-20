@@ -1,6 +1,7 @@
 import minus from "@assets/minus.svg";
 import plus from "@assets/plus.svg";
 import ProductImg from "@components/common/entities/ProductImg";
+import Flex from "@components/common/shared/Flex";
 import Spacing from "@components/common/shared/Spacing";
 import CheckBox from "@components/common/shared/CheckBox";
 import Divider from "@components/common/shared/Divider";
@@ -40,24 +41,24 @@ export default function CartItem({
     <CartItemContainer>
       <Divider />
       <Spacing size={0.75} />
-      <ActionButtonWrapper>
+      <Flex justify="space-between" align="center">
         <CheckBox checked={checked} onChange={onSelect} />
         <DeleteButton onClick={onDelete}>삭제</DeleteButton>
-      </ActionButtonWrapper>
+      </Flex>
       <Spacing size={0.75} />
 
-      <CartItemInfoContainer>
+      <Flex gap={24} align="center">
         <ProductImg src={image} alt={name} />
-        <CartItemInfoWrapper>
-          <ProductInfoWrapper>
+        <Flex direction="column" gap={24}>
+          <Flex direction="column" gap={4}>
             <Text typograph="caption" as="p">
               {name}
             </Text>
             <Text typograph="heading1" as="p">
               {price.toLocaleString()}원
             </Text>
-          </ProductInfoWrapper>
-          <QuantityWrapper>
+          </Flex>
+          <Flex gap={8} align="center">
             <QuantityButton
               src={minus}
               disabled={quantity <= quantityRange.min}
@@ -73,20 +74,14 @@ export default function CartItem({
               disabled={quantity >= quantityRange.max}
               onClick={() => onChangeQuantity(quantity + 1)}
             />
-          </QuantityWrapper>
-        </CartItemInfoWrapper>
-      </CartItemInfoContainer>
+          </Flex>
+        </Flex>
+      </Flex>
     </CartItemContainer>
   );
 }
 
 const CartItemContainer = styled.li``;
-
-const ActionButtonWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
 
 const DeleteButton = styled.button`
   padding: 0.25rem 0.5rem;
@@ -100,30 +95,6 @@ const DeleteButton = styled.button`
   :active {
     background-color: ${COLOR_PALETTE.border};
   }
-`;
-
-const CartItemInfoContainer = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-`;
-
-const CartItemInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
-
-const ProductInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`;
-
-const QuantityWrapper = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
 `;
 
 const QuantityButton = styled.button<{ src: string }>`

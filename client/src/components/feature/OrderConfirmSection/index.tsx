@@ -1,6 +1,7 @@
 import OrderAmountContent from "@components/common/entities/OrderAmountContent";
 import OrderConfirmContent from "@components/common/entities/OrderConfirmContent";
 import Button from "@components/common/shared/Button";
+import Flex from "@components/common/shared/Flex";
 import PositionBottom from "@components/common/shared/PositionBottom";
 import Spacing from "@components/common/shared/Spacing";
 import styled from "@emotion/styled";
@@ -21,7 +22,7 @@ export default function OrderConfirmSection() {
   const { products, totalAmount } = state;
 
   return (
-    <ContentContainer>
+    <ContentContainer direction="column" align="center" justify="center">
       <OrderConfirmContent
         productCount={products.length}
         totalQuantity={calcTotalQuantity(products)}
@@ -38,10 +39,6 @@ export default function OrderConfirmSection() {
   );
 }
 
-const ContentContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const ContentContainer = styled(Flex.withComponent('section'))`
   flex: 1;
 `;

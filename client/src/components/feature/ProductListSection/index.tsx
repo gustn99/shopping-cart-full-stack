@@ -1,5 +1,6 @@
 import ProductImg from "@components/common/entities/ProductImg";
 import Divider from "@components/common/shared/Divider";
+import Flex from "@components/common/shared/Flex";
 import Spacing from "@components/common/shared/Spacing";
 import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
@@ -16,26 +17,24 @@ export default function ProductListSection() {
         <OrderItemContainer key={id}>
           <Divider />
           <Spacing size={0.75} />
-          <OrderItemInfoContainer>
+          <Flex gap={24} align="center">
             <ProductImg src={image} alt={name} />
-            <OrderItemInfoWrapper>
-              <ProductInfoWrapper>
+            <Flex direction="column" gap={24}>
+              <Flex direction="column" gap={4}>
                 <Text typograph="caption" as="p">
                   {name}
                 </Text>
                 <Text typograph="heading1" as="p">
                   {price.toLocaleString()}원
                 </Text>
-              </ProductInfoWrapper>
-              <QuantityWrapper>
-                <Quantity>
-                  <Text typograph="caption" as="span">
-                    {quantity}개
-                  </Text>
-                </Quantity>
-              </QuantityWrapper>
-            </OrderItemInfoWrapper>
-          </OrderItemInfoContainer>
+              </Flex>
+              <Quantity gap={8} align="center">
+                <Text typograph="caption" as="span">
+                  {quantity}개
+                </Text>
+              </Quantity>
+            </Flex>
+          </Flex>
         </OrderItemContainer>
       ))}
     </ul>
@@ -44,31 +43,7 @@ export default function ProductListSection() {
 
 const OrderItemContainer = styled.li``;
 
-const OrderItemInfoContainer = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-`;
-
-const OrderItemInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
-
-const ProductInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`;
-
-const QuantityWrapper = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-`;
-
-const Quantity = styled.div`
+const Quantity = styled(Flex)`
   width: 1.5rem;
   text-align: center;
 `;

@@ -5,6 +5,7 @@ import CartHeading from "@components/common/entities/CartHeading";
 import CartList from "@components/common/entities/CartList";
 import CartOrderAmount from "@components/common/entities/CartOrderAmount";
 import Button from "@components/common/shared/Button";
+import Flex from "@components/common/shared/Flex";
 import PositionBottom from "@components/common/shared/PositionBottom";
 import Spacing from "@components/common/shared/Spacing";
 import Text from "@components/common/shared/Text";
@@ -105,7 +106,7 @@ export default function CartsSection() {
   );
 
   return (
-    <ContentContainer>
+    <ContentContainer direction="column">
       <Spacing size={2.25} />
       <CartHeading productCount={data.length} />
       <Spacing size={2.25} />
@@ -123,7 +124,7 @@ export default function CartsSection() {
           <CartOrderAmount orderAmount={orderAmount} deliveryFee={deliveryFee} totalAmount={totalAmount} />
         </>
       ) : (
-        <EmptyCartContainer>
+        <EmptyCartContainer align="center" justify="center">
           <Text typograph="body1" as="p">
             장바구니에 담은 상품이 없습니다.
           </Text>
@@ -138,18 +139,13 @@ export default function CartsSection() {
   );
 }
 
-const ContentContainer = styled.section`
+const ContentContainer = styled(Flex.withComponent('section'))`
   width: 100%;
   padding-inline: 1.5rem;
-  display: flex;
-  flex-direction: column;
   flex: 1;
   overflow: auto;
 `;
 
-const EmptyCartContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const EmptyCartContainer = styled(Flex)`
   flex: 1;
 `;

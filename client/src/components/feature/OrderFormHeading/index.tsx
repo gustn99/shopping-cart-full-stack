@@ -1,11 +1,11 @@
+import Flex from "@components/common/shared/Flex";
 import Text from "@components/common/shared/Text";
-import styled from "@emotion/styled";
 
 export default function OrderFormHeading() {
   // 주문 조회
 
   return (
-    <OrderFormHeadingContainer>
+    <Flex direction="column" gap={12}>
       <Text typograph="heading1" as="h2">
         주문 확인
       </Text>
@@ -14,12 +14,6 @@ export default function OrderFormHeading() {
         <br />
         최종 결제 금액을 확인해 주세요.
       </Text>
-    </OrderFormHeadingContainer>
+    </Flex>
   );
 }
-
-const OrderFormHeadingContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
