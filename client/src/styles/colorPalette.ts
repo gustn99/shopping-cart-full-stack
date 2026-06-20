@@ -5,6 +5,7 @@ export const COLOR_PALETTE = {
   white: "#ffffff",
   border: "#0000001A",
   disabled: "#BEBEBE",
+  dimmed: "#00000059",
   "image-placeholder": "#DCE3EA",
   "skeleton-base": "#E5E9EE",
   "skeleton-highlight": "#F2F4F7",
