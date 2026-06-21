@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useState, useCallback, useMemo } from "react";
+import { createContext, useState, useCallback, useMemo, Suspense } from "react";
+import ErrorBoundary from "@components/common/shared/ErrorBoundary";
+import ErrorFallback from "@components/common/shared/ErrorFallback";
 
 type StrictOmit<T, K extends string> = Omit<T, K> & { [P in K]?: never };
 
@@ -63,11 +65,16 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 
   const value = useMemo(() => ({ open, close }), [open, close]);
 
+  // TODO: 더 나은 모달 fallback 고민
   return (
     <ModalContext.Provider value={value}>
       {children}
       {modal && (
-        <modal.Component key={modal.key} {...modal.props} onConfirm={modal.onConfirm} onCancel={modal.onCancel} />
+        <ErrorBoundary fallback={<ErrorFallback />}>
+          <Suspense fallback={null}>
+            <modal.Component key={modal.key} {...modal.props} onConfirm={modal.onConfirm} onCancel={modal.onCancel} />
+          </Suspense>
+        </ErrorBoundary>
       )}
     </ModalContext.Provider>
   );
