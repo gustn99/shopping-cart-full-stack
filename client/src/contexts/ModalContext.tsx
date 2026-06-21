@@ -21,7 +21,7 @@ interface ModalState {
   onCancel: (reason?: any) => void;
 }
 
-interface ModalContextValue {
+export interface ModalContextValue {
   open: <TResult = any, TProps = Record<string, unknown>>(
     key: string,
     Component: React.ElementType<TProps & ModalComponentProps<TResult>>,

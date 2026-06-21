@@ -70,8 +70,8 @@ export const postProducts = http.post<never, Partial<ServerProduct>>(
       {
         status: 201,
         data: {
-          id: Date.now(),
           ...(body as ServerProduct),
+          id: Date.now(),
         },
       },
       { status: 201 },
