@@ -1,6 +1,31 @@
 import type { ServerOrder, ServerCoupon } from "./orders.type";
 
-export const DEFAULT_ORDERS: ServerOrder[] = [];
+export const DEFAULT_ORDERS: ServerOrder[] = [
+  {
+    orderId: 1,
+    products: [
+      {
+        id: 1,
+        imgUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+        name: "무선 헤드폰",
+        price: 129000,
+        quantity: 1,
+        hasGift: false,
+      },
+      {
+        id: 2,
+        imgUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+        name: "러닝화",
+        price: 89000,
+        quantity: 2,
+        hasGift: false,
+      },
+    ],
+    coupons: [1, 2],
+    isRemoteArea: false,
+    deliveryFee: 3000,
+  },
+];
 
 // Stateful orders store for testing
 export let orders: ServerOrder[] = JSON.parse(JSON.stringify(DEFAULT_ORDERS));
