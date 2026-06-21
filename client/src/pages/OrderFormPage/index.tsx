@@ -34,11 +34,7 @@ export default function OrderFormPage() {
             variant="outline"
             size="md"
             onClick={async () => {
-              const selectedCouponIds = await modal.open<number[]>({
-                key: "couponModal",
-                Component: CouponModal,
-                options: { shouldLockScroll: true },
-              });
+              const selectedCouponIds = await modal.open<number[]>("couponModal", CouponModal);
               console.log(selectedCouponIds);
             }}
           >

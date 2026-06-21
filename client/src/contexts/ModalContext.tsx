@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useState, useCallback, useMemo, useEffect } from "react";
+import { createContext, useState, useCallback, useMemo } from "react";
 
 export interface ModalComponentProps<T = any> {
   resolve: (value: T | PromiseLike<T>) => void;
   reject: (reason?: any) => void;
-}
-
-interface ModalOptions {
-  shouldLockScroll?: boolean;
 }
 
 interface ModalState {
@@ -17,16 +13,14 @@ interface ModalState {
   props: any;
   resolve: (value: any) => void;
   reject: (reason?: any) => void;
-  options: ModalOptions;
 }
 
 interface ModalContextValue {
-  open: <TResult = any, TProps = Record<string, unknown>>(args: {
-    key: string;
-    Component: React.ElementType<TProps & ModalComponentProps<TResult>>;
-    props?: TProps;
-    options?: ModalOptions;
-  }) => Promise<TResult>;
+  open: <TResult = any, TProps = Record<string, unknown>>(
+    key: string,
+    Component: React.ElementType<TProps & ModalComponentProps<TResult>>,
+    props?: TProps,
+  ) => Promise<TResult>;
   close: () => void;
 }
 
@@ -35,7 +29,7 @@ export const ModalContext = createContext<ModalContextValue | null>(null);
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [modal, setModal] = useState<ModalState | null>(null);
 
-  const open: ModalContextValue["open"] = useCallback(({ key, Component, props, options }) => {
+  const open: ModalContextValue["open"] = useCallback((key, Component, props) => {
     return new Promise((resolve, reject) => {
       const handleResolve = (value: any) => {
         setModal(null);
@@ -53,7 +47,6 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
         props: props || {},
         resolve: handleResolve,
         reject: handleReject,
-        options: options || {},
       });
     });
   }, []);
@@ -62,20 +55,6 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     if (modal) {
       modal.reject();
     }
-  }, [modal]);
-
-  useEffect(() => {
-    if (!modal) return;
-
-    if (modal.options.shouldLockScroll) {
-      document.body.style.overflowY = "hidden";
-    }
-
-    return () => {
-      if (modal.options.shouldLockScroll) {
-        document.body.style.overflowY = "";
-      }
-    };
   }, [modal]);
 
   const value = useMemo(() => ({ open, close }), [open, close]);

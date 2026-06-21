@@ -23,6 +23,7 @@ export default function Modal({
     }
   };
 
+  // TODO: 모달a가 닫히면 바로 모달b가 뜨는 상황에 scroll이 default로 돌아가진 않을지?
   useEffect(() => {
     if (shouldLockBackgroundScroll) {
       document.body.style.overflowY = "hidden";
