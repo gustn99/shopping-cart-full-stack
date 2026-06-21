@@ -4,23 +4,23 @@ import Flex from "@components/common/shared/Flex";
 import Spacing from "@components/common/shared/Spacing";
 import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
+import { COLOR_PALETTE } from "@styles/colorPalette.ts";
 
 interface OrderItemProps {
   name: string;
-  image: string;
+  imgUrl: string;
   price: number;
   quantity: number;
+  hasGift: boolean;
 }
 
-export default function OrderItem({ name, image, price, quantity }: OrderItemProps) {
-  // 상품 리스트 조회
-
+export default function OrderItem({ name, imgUrl, price, quantity, hasGift }: OrderItemProps) {
   return (
     <OrderItemWrapper>
       <Divider />
       <Spacing size={0.75} />
       <Flex gap={24} align="center">
-        <ProductImg src={image} alt={name} />
+        <ProductImg src={imgUrl} alt={name} />
         <Flex direction="column" gap={24}>
           <Flex direction="column" gap={4}>
             <Text typograph="caption" as="p">
@@ -30,11 +30,16 @@ export default function OrderItem({ name, image, price, quantity }: OrderItemPro
               {price.toLocaleString()}원
             </Text>
           </Flex>
-          <Quantity gap={8} align="center">
+          <Flex gap={8} align="center">
             <Text typograph="caption" as="span">
               {quantity}개
             </Text>
-          </Quantity>
+            {hasGift && (
+              <Text typograph="caption" as="span" color={COLOR_PALETTE.blue}>
+                + 1
+              </Text>
+            )}
+          </Flex>
         </Flex>
       </Flex>
     </OrderItemWrapper>
@@ -42,8 +47,3 @@ export default function OrderItem({ name, image, price, quantity }: OrderItemPro
 }
 
 const OrderItemWrapper = styled.li``;
-
-const Quantity = styled(Flex)`
-  width: 1.5rem;
-  text-align: center;
-`;

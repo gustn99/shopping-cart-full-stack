@@ -13,7 +13,7 @@ export default function ProductListSection({ orderId }: ProductListSectionProps)
   return (
     <OrderList as="ul" direction="column" gap={20} aria-label="상품 리스트">
       {order.products.map((item) => (
-        <OrderItem key={item.id} name={item.name} price={item.price} quantity={item.quantity} image={item.imgUrl} />
+        <OrderItem key={item.id} {...item} />
       ))}
     </OrderList>
   );

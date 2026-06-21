@@ -9,4 +9,5 @@ export const COLOR_PALETTE = {
   "image-placeholder": "#DCE3EA",
   "skeleton-base": "#E5E9EE",
   "skeleton-highlight": "#F2F4F7",
+  blue: "#0065FF",
 };
