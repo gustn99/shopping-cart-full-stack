@@ -21,7 +21,10 @@ export interface ServerPostOrderRequest {
 }
 
 export interface ServerPostOrderResponse {
-  orderId: number;
+  status: number;
+  data: {
+    orderId: number;
+  };
 }
 
 export interface ServerOrderProductDetail {
@@ -34,10 +37,13 @@ export interface ServerOrderProductDetail {
 }
 
 export interface ServerGetOrderResponse {
-  products: ServerOrderProductDetail[];
-  coupons: number[];
-  isRemoteArea: boolean;
-  deliveryFee?: number;
+  status: number;
+  data: {
+    products: ServerOrderProductDetail[];
+    coupons: number[];
+    isRemoteArea: boolean;
+    deliveryFee?: number;
+  };
 }
 
 export interface ServerPatchOrderRequest {
@@ -46,9 +52,12 @@ export interface ServerPatchOrderRequest {
 }
 
 export interface ServerPatchOrderResponse {
-  couponId?: number[];
-  isRemoteArea?: boolean;
-  deliveryFee?: number;
+  status: number;
+  data: {
+    couponId?: number[];
+    isRemoteArea?: boolean;
+    deliveryFee?: number;
+  };
 }
 
 export interface ServerGetDiscountRequest {
@@ -56,7 +65,10 @@ export interface ServerGetDiscountRequest {
 }
 
 export interface ServerGetDiscountResponse {
-  discountAmount: number;
+  status: number;
+  data: {
+    discountAmount: number;
+  };
 }
 
 export interface ServerCoupon {
@@ -69,7 +81,10 @@ export interface ServerCoupon {
 }
 
 export interface ServerGetCouponsResponse {
-  coupons: ServerCoupon[];
+  status: number;
+  data: {
+    coupons: ServerCoupon[];
+  };
 }
 
 export const mapPostOrderRequestToServer = (req: PostOrderRequest): ServerPostOrderRequest => ({
@@ -89,7 +104,7 @@ export const mapGetDiscountRequestToServer = (req: GetDiscountRequest): ServerGe
 });
 
 export const mapServerPostOrderResponseToResponse = (response: ServerPostOrderResponse): PostOrderResponse => ({
-  orderId: response.orderId,
+  orderId: response.data.orderId,
 });
 
 export const mapServerOrderProductDetailToDetail = (product: ServerOrderProductDetail): OrderProductDetail => ({
@@ -102,20 +117,20 @@ export const mapServerOrderProductDetailToDetail = (product: ServerOrderProductD
 });
 
 export const mapServerGetOrderResponseToResponse = (response: ServerGetOrderResponse): GetOrderResponse => ({
-  products: response.products.map(mapServerOrderProductDetailToDetail),
-  coupons: response.coupons,
-  isRemoteArea: response.isRemoteArea,
-  deliveryFee: response.deliveryFee,
+  products: response.data.products.map(mapServerOrderProductDetailToDetail),
+  coupons: response.data.coupons,
+  isRemoteArea: response.data.isRemoteArea,
+  deliveryFee: response.data.deliveryFee,
 });
 
 export const mapServerPatchOrderResponseToResponse = (response: ServerPatchOrderResponse): PatchOrderResponse => ({
-  couponId: response.couponId,
-  isRemoteArea: response.isRemoteArea,
-  deliveryFee: response.deliveryFee,
+  couponId: response.data.couponId,
+  isRemoteArea: response.data.isRemoteArea,
+  deliveryFee: response.data.deliveryFee,
 });
 
 export const mapServerGetDiscountResponseToResponse = (response: ServerGetDiscountResponse): GetDiscountResponse => ({
-  discountAmount: response.discountAmount,
+  discountAmount: response.data.discountAmount,
 });
 
 export const mapServerCouponToCoupon = (coupon: ServerCoupon): Coupon => ({
@@ -128,5 +143,5 @@ export const mapServerCouponToCoupon = (coupon: ServerCoupon): Coupon => ({
 });
 
 export const mapServerGetCouponsResponseToResponse = (response: ServerGetCouponsResponse): GetCouponsResponse => ({
-  coupons: response.coupons.map(mapServerCouponToCoupon),
+  coupons: response.data.coupons.map(mapServerCouponToCoupon),
 });
