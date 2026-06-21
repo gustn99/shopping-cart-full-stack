@@ -28,6 +28,7 @@ export interface ServerPostOrderResponse {
 }
 
 export interface ServerOrderProductDetail {
+  id: number;
   title: string;
   price: number;
   imgUrl: string;
@@ -107,6 +108,7 @@ export const mapServerPostOrderResponseToResponse = (response: ServerPostOrderRe
 });
 
 export const mapServerOrderProductDetailToDetail = (product: ServerOrderProductDetail): OrderProductDetail => ({
+  id: product.id,
   title: product.title,
   price: product.price,
   imgUrl: product.imgUrl,

@@ -12,6 +12,7 @@ export interface PostOrderResponse {
 }
 
 export interface OrderProductDetail {
+  id: number;
   title: string;
   price: number;
   imgUrl: string;
