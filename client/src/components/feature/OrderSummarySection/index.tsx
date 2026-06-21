@@ -14,12 +14,12 @@ interface OrderSummarySectionProps {
 
 export default function OrderSummarySection({ orderId }: OrderSummarySectionProps) {
   const { data: order } = useOrderQuery(orderId);
-  const { data: discount } = useOrderDiscountQuery(orderId, { couponId: order.coupons });
+  const { data: discount } = useOrderDiscountQuery(orderId, { couponId: order.coupons ?? [] });
 
   const totalOrderAmount = order.products.reduce((acc, p) => acc + p.price * p.quantity, 0);
   const discountAmount = discount.discountAmount;
   const deliveryFee = order.deliveryFee ?? 0;
-  
+
   const totalPaymentAmount = totalOrderAmount - discountAmount + deliveryFee;
 
   return (
