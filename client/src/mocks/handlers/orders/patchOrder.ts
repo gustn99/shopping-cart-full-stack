@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { orders } from "@/mocks/datas/orders";
+import type { ServerPatchOrderResponse } from "@/apis/orders/dto";
 
 export const patchOrder = http.patch("/api/orders/:orderId", async ({ params, request }) => {
   const { orderId } = params;
@@ -27,11 +28,14 @@ export const patchOrder = http.patch("/api/orders/:orderId", async ({ params, re
   const hasFreeShipping = order.coupons?.includes(3);
   order.deliveryFee = hasFreeShipping ? 0 : order.isRemoteArea ? 6000 : 3000;
 
-  return HttpResponse.json(
+  return HttpResponse.json<ServerPatchOrderResponse>(
     {
-      couponId: order.coupons,
-      isRemoteArea: order.isRemoteArea,
-      deliveryFee: order.deliveryFee,
+      status: 200,
+      data: {
+        couponId: order.coupons,
+        isRemoteArea: order.isRemoteArea,
+        deliveryFee: order.deliveryFee,
+      },
     },
     { status: 200 },
   );

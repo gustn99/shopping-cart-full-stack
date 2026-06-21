@@ -1,8 +1,5 @@
-import type { ServerProduct } from "@/apis/carts/dto";
+import type { ServerCartResponse } from "@/apis/carts/dto";
 
-export type ServerCartProduct = ServerProduct & { quantity: number };
+export type ServerCartProduct = ServerCartResponse["data"]["products"][number];
 
-export interface ServerCart {
-  id: number;
-  products: ServerCartProduct[];
-}
+export type ServerCart = ServerCartResponse["data"];

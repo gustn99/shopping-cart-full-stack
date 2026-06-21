@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { orders } from "@/mocks/datas/orders";
+import type { ServerGetOrderResponse } from "@/apis/orders/dto";
 
 export const getOrder = http.get("/api/orders/:orderId", ({ params }) => {
   const { orderId } = params;
@@ -11,12 +12,15 @@ export const getOrder = http.get("/api/orders/:orderId", ({ params }) => {
     return HttpResponse.json({ errorCode: "ORDER_EXPIRED", errorMessage: "주문이 만료되었습니다." }, { status: 409 });
   }
 
-  return HttpResponse.json(
+  return HttpResponse.json<ServerGetOrderResponse>(
     {
-      products: order.products,
-      coupons: order.coupons,
-      isRemoteArea: order.isRemoteArea,
-      deliveryFee: order.deliveryFee,
+      status: 200,
+      data: {
+        products: order.products,
+        coupons: order.coupons ?? [],
+        isRemoteArea: order.isRemoteArea ?? false,
+        deliveryFee: order.deliveryFee,
+      },
     },
     { status: 200 },
   );

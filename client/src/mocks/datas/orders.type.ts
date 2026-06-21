@@ -1,11 +1,6 @@
-export interface ServerOrderProduct {
-  id: number;
-  title: string;
-  price: number;
-  imgUrl: string;
-  quantity: number;
-  hasGift?: boolean;
-}
+import type { ServerOrderProductDetail, ServerCoupon as APIServerCoupon } from "@/apis/orders/dto";
+
+export type ServerOrderProduct = ServerOrderProductDetail;
 
 export interface ServerOrder {
   orderId: number;
@@ -15,11 +10,4 @@ export interface ServerOrder {
   deliveryFee?: number;
 }
 
-export interface ServerCoupon {
-  id: number; // API docs don't specify id for GET /coupons but we need it internally
-  title: string;
-  expirationDate: string;
-  minOrderAmount?: number;
-  availableHours?: string;
-  isCouponUsable: boolean;
-}
+export type ServerCoupon = APIServerCoupon;

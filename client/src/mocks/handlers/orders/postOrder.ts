@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 import { orders } from "@/mocks/datas/orders";
 import { products } from "@/mocks/datas/products";
 import type { ServerOrderProduct } from "@/mocks/datas/orders.type";
+import type { ServerPostOrderResponse } from "@/apis/orders/dto";
 
 export const postOrder = http.post("/api/orders", async ({ request }) => {
   const body = (await request.json()) as { products: { id: number; quantity: number }[] };
@@ -43,6 +44,7 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
       price: productData.price,
       imgUrl: productData.imgUrl,
       quantity: reqProduct.quantity,
+      hasGift: false,
     });
   }
 
@@ -53,5 +55,5 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
     products: orderProducts,
   });
 
-  return HttpResponse.json({ orderId }, { status: 201 });
+  return HttpResponse.json<ServerPostOrderResponse>({ status: 201, data: { orderId } }, { status: 201 });
 });

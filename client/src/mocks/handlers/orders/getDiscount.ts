@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import type { ServerGetDiscountResponse } from "@/apis/orders/dto";
 
 export const getDiscount = http.get("/api/orders/:orderId/discount", ({ request }) => {
   const url = new URL(request.url);
@@ -20,5 +21,5 @@ export const getDiscount = http.get("/api/orders/:orderId/discount", ({ request 
   if (couponIds.includes("1")) discountAmount += 5000;
   // Others not calculated here accurately for simplicity, but could be enhanced
 
-  return HttpResponse.json({ discountAmount }, { status: 200 });
+  return HttpResponse.json<ServerGetDiscountResponse>({ status: 200, data: { discountAmount } }, { status: 200 });
 });
