@@ -2,7 +2,8 @@ import "@testing-library/jest-dom";
 
 import { CART_QUERY_KEY } from "@hooks/useCartQuery";
 import { queryStore } from "@/queries/instance";
-import { seedCarts, server } from "@/tests/setup/server";
+import { server } from "@/mocks/server";
+import { seedCarts } from "@/mocks/datas/carts";
 
 // JSDOM does not support HTMLDialogElement's showModal and close methods.
 if (typeof HTMLDialogElement === "function") {

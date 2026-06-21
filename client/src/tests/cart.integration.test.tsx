@@ -1,11 +1,7 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import {
-  cartErrorHandler,
-  makeCart,
-  makeDelayedCartHandler,
-  seedCarts,
-  server,
-} from "./setup/server";
+import { seedCarts, makeServerCartProduct } from "@/mocks/datas/carts";
+import { server } from "@/mocks/server";
+import { cartsScenarios } from "@/mocks/scenarios";
 import { renderCartsApp } from "./setup/renderCartsApp";
 import { ROUTES } from "@constants/routes.ts";
 
@@ -200,8 +196,8 @@ describe("가격 동기화", () => {
 
   it("선택 금액이 100,000원 이상이면 배송비 0원, 미만이면 3,000원이다", async () => {
     seedCarts([
-      makeCart(10, "상품A", 50000, 1),
-      makeCart(11, "상품B", 60000, 1),
+      makeServerCartProduct(10, "상품A", 50000, 1),
+      makeServerCartProduct(11, "상품B", 60000, 1),
     ]);
     const { user } = renderCartsApp();
     await screen.findByText("상품A");
@@ -293,7 +289,7 @@ describe("상태별 화면", () => {
 
   it("에러 발생 시 에러 폴백 문구가 표시된다", async () => {
     const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    server.use(cartErrorHandler); // GET /api/carts → 500
+    server.use(cartsScenarios.getError); // GET /api/carts → 500
 
     renderCartsApp();
 
@@ -305,7 +301,7 @@ describe("상태별 화면", () => {
 
   it("로딩 중에는 스켈레톤이 노출된다", async () => {
     // 응답을 지연시켜 로딩(Suspense fallback) 구간을 결정적으로 만든다.
-    server.use(makeDelayedCartHandler(100));
+    server.use(cartsScenarios.getDelayed(100));
     renderCartsApp();
 
     // 첫 렌더에서 쿼리가 pending → Suspense fallback(스켈레톤)이 동기적으로 노출된다.
