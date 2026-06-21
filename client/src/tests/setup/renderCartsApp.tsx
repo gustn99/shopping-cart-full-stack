@@ -1,7 +1,6 @@
 import { ROUTES } from "@constants/routes";
 import CartsPage from "@pages/CartsPage";
 import OrderCompletePage from "@pages/OrderCompletePage";
-import OrderConfirmPage from "@pages/OrderConfirmPage";
 import OrderFormPage from "@pages/OrderFormPage";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -22,7 +21,6 @@ export function renderCartsApp(initialPath: string = ROUTES.CARTS) {
         <Routes>
           <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
           <Route path={ROUTES.CARTS} element={<CartsPage />} />
-          <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
           <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
           <Route path={ROUTES.ORDER_COMPLETE} element={<OrderCompletePage />} />
         </Routes>
