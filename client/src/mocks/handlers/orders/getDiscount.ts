@@ -1,0 +1,24 @@
+import { http, HttpResponse } from "msw";
+
+export const getDiscount = http.get("/api/orders/:orderId/discount", ({ request }) => {
+  const url = new URL(request.url);
+  const couponIds = url.searchParams.getAll("couponId");
+
+  if (!couponIds || couponIds.length === 0) {
+    return HttpResponse.json(
+      {
+        errorCode: "MISSING_FIELD",
+        errorMessage: "필수값이 누락되었습니다.",
+        data: [{ type: "couponId", errorCode: "MISSING_FIELD_COUPONID" }],
+      },
+      { status: 400 },
+    );
+  }
+
+  // Simple mock: calculate discount roughly based on coupon ID (e.g. 5000 for ID 1)
+  let discountAmount = 0;
+  if (couponIds.includes("1")) discountAmount += 5000;
+  // Others not calculated here accurately for simplicity, but could be enhanced
+
+  return HttpResponse.json({ discountAmount }, { status: 200 });
+});
