@@ -13,7 +13,7 @@ import Modal from "@components/common/shared/Modal";
 
 interface CouponModalProps extends ModalComponentProps<number[]> {}
 
-export default function CouponModal({ resolve, reject }: CouponModalProps) {
+export default function CouponModal({ onConfirm, onCancel }: CouponModalProps) {
   const { checkedItems, select, unselect } = useCheckedItems<number>();
   const canCheckMore = checkedItems.length < 2;
   const isChecked = (id: number) => checkedItems.includes(id);
@@ -26,11 +26,11 @@ export default function CouponModal({ resolve, reject }: CouponModalProps) {
   };
 
   const handleClose = () => {
-    reject();
+    onCancel();
   };
 
   const handleConfirm = () => {
-    resolve(checkedItems);
+    onConfirm(checkedItems);
   };
 
   const modalRef = useRef<HTMLDialogElement>(null);

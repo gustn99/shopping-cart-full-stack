@@ -2,28 +2,28 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useCallback, useMemo } from "react";
 
-export type ModalResult<T> =
-  | { status: "confirmed"; data: T }
-  | { status: "canceled" };
+type StrictOmit<T, K extends string> = Omit<T, K> & { [P in K]?: never };
+
+export type ModalResult<T> = { status: "confirmed"; data: T } | { status: "canceled" };
 
 export interface ModalComponentProps<T = any> {
-  resolve: (value: T | PromiseLike<T>) => void;
-  reject: (reason?: any) => void;
+  onConfirm: (value: T | PromiseLike<T>) => void;
+  onCancel: (reason?: any) => void;
 }
 
 interface ModalState {
   key: string;
   Component: React.ElementType<any>;
   props: any;
-  resolve: (value: any) => void;
-  reject: (reason?: any) => void;
+  onConfirm: (value: any) => void;
+  onCancel: (reason?: any) => void;
 }
 
 interface ModalContextValue {
   open: <TResult = any, TProps = Record<string, unknown>>(
     key: string,
     Component: React.ElementType<TProps & ModalComponentProps<TResult>>,
-    props?: TProps,
+    props?: StrictOmit<TProps, keyof ModalComponentProps>,
   ) => Promise<ModalResult<TResult>>;
   close: () => void;
 }
@@ -49,15 +49,15 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
         key,
         Component,
         props: props || {},
-        resolve: handleResolve,
-        reject: handleReject,
+        onConfirm: handleResolve,
+        onCancel: handleReject,
       });
     });
   }, []);
 
   const close = useCallback(() => {
     if (modal) {
-      modal.reject();
+      modal.onCancel();
     }
   }, [modal]);
 
@@ -66,7 +66,9 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ModalContext.Provider value={value}>
       {children}
-      {modal && <modal.Component key={modal.key} {...modal.props} resolve={modal.resolve} reject={modal.reject} />}
+      {modal && (
+        <modal.Component key={modal.key} {...modal.props} onConfirm={modal.onConfirm} onCancel={modal.onCancel} />
+      )}
     </ModalContext.Provider>
   );
 };
