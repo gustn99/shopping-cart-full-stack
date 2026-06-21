@@ -40,7 +40,7 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
 
     orderProducts.push({
       id: productData.id,
-      title: productData.name,
+      name: productData.name,
       price: productData.price,
       imgUrl: productData.imgUrl,
       quantity: reqProduct.quantity,
@@ -48,11 +48,14 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
     });
   }
 
-  const orderId = Date.now();
+  const orderId = orders.length + 1;
 
   orders.push({
     orderId,
     products: orderProducts,
+    coupons: [],
+    isRemoteArea: false,
+    deliveryFee: 3000,
   });
 
   return HttpResponse.json<ServerPostOrderResponse>({ status: 201, data: { orderId } }, { status: 201 });

@@ -15,15 +15,22 @@ import useCartQuantityUpdateMutation from "@hooks/useCartQuantityUpdateMutation"
 import useCartQuery from "@hooks/useCartQuery";
 import useCheckedItems from "@hooks/useCheckedItems";
 import useOrderFormNavigate from "@hooks/useOrderFormNavigate.ts";
+import useOrderCreateMutation from "@/hooks/useOrderCreateMutation";
 import { getCheckedItemsFromLocalStorage, setCheckedItemsToLocalStorage } from "./libs/localStorage";
 import { calcDeliveryFee, calcOrderAmount, calcTotalAmount, makeCheckedItem } from "./libs/carts";
 import { useEffect } from "react";
 
 export default function CartsSection() {
+  const { navigate } = useOrderFormNavigate();
+
   const { data } = useCartQuery();
   const { mutate: quantityMutate, error: quantityMutateError } = useCartQuantityUpdateMutation();
   const { mutate: deleteMutate, error: deleteMutateError } = useCartItemDeleteMutation();
-  const { navigate } = useOrderFormNavigate();
+  const { mutate: createOrder } = useOrderCreateMutation({
+    onSuccess: (data) => {
+      navigate({ orderId: data.orderId });
+    },
+  });
 
   const isCheckedItemsSaved = getCheckedItemsFromLocalStorage().length === 0;
   const initialCheckedItems = isCheckedItemsSaved ? makeCheckedItem(data) : getCheckedItemsFromLocalStorage();
@@ -63,11 +70,15 @@ export default function CartsSection() {
     unselect(id);
   };
 
-  // TODO: 주문 플로우 구축하고 서버 응답 기반 orderId 연결 필요
   const handleConfirm = () => {
-    navigate({
-      orderId: 1,
-    });
+    const selectedProducts = data
+      .filter((item) => checkedItems.includes(item.product.id))
+      .map((item) => ({
+        id: item.product.id,
+        quantity: item.quantity,
+      }));
+
+    createOrder({ products: selectedProducts });
   };
 
   useEffect(
