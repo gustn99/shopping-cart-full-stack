@@ -6,7 +6,7 @@ import DeliverySection from "@components/feature/DeliverySection";
 import GoBackButton from "@components/feature/GoBackButton";
 import OrderFormHeading from "@components/feature/OrderFormHeading";
 import OrderSummarySection from "@components/feature/OrderSummarySection";
-import PaymentButton from "@components/feature/PaymentButton.tsx";
+import PaymentButton from "@components/feature/PaymentButton";
 import ProductListSection from "@components/feature/ProductListSection";
 import styled from "@emotion/styled";
 import CouponApplyButton from "@components/feature/CouponApplyButton";
