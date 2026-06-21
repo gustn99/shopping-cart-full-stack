@@ -1,8 +1,9 @@
-import { screen, within } from "@testing-library/react";
+import { screen, within, waitFor } from "@testing-library/react";
 import { renderCartsApp } from "./setup/renderCartsApp";
 import { ROUTES } from "@constants/routes";
 import { server } from "@/mocks/server";
 import { ordersScenarios } from "@/mocks/scenarios/orders";
+import { seedOrders } from "@/mocks/datas/orders";
 
 // TODO: 대상 요소를 변수로 선언할 건지 인라인으로 넘길 건지 통일
 
@@ -10,7 +11,15 @@ const renderOrderFormApp = () => renderCartsApp({ pathname: ROUTES.ORDER_FORM, s
 
 describe("OrderFormPage", () => {
   beforeEach(() => {
-    server.use(ordersScenarios.getSuccess, ordersScenarios.getCouponsSuccess, ordersScenarios.getDiscountSuccess);
+    seedOrders([
+      {
+        orderId: 1,
+        products: [],
+        coupons: [],
+        isRemoteArea: false,
+        deliveryFee: 3000,
+      },
+    ]);
   });
 
   describe("쿠폰 모달", () => {
@@ -31,10 +40,10 @@ describe("OrderFormPage", () => {
       const couponCheckbox = within(couponList).getAllByRole("checkbox")[0];
 
       await user.click(couponCheckbox);
-      expect(couponCheckbox).toBeChecked();
+      await waitFor(() => expect(couponCheckbox).toBeChecked());
 
       await user.click(couponCheckbox);
-      expect(couponCheckbox).not.toBeChecked();
+      await waitFor(() => expect(couponCheckbox).not.toBeChecked());
     });
 
     it("쿠폰 아이템이 2개 checked된 경우 다른 checkbox는 disabled된다", async () => {
@@ -43,15 +52,18 @@ describe("OrderFormPage", () => {
 
       const couponList = await screen.findByRole("list", { name: /쿠폰 리스트/ });
       const checkboxes = within(couponList).getAllByRole("checkbox") as HTMLInputElement[];
+      const enabledCheckboxes = checkboxes.filter((c) => !c.disabled);
 
-      if (checkboxes.length >= 2) {
-        await user.click(checkboxes[0]);
-        await user.click(checkboxes[1]);
+      if (enabledCheckboxes.length >= 2) {
+        await user.click(enabledCheckboxes[0]);
+        await user.click(enabledCheckboxes[1]);
 
-        checkboxes.forEach((checkbox) => {
-          if (!checkbox.checked) {
-            expect(checkbox).toBeDisabled();
-          }
+        await waitFor(() => {
+          enabledCheckboxes.forEach((checkbox) => {
+            if (!checkbox.checked) {
+              expect(checkbox).toBeDisabled();
+            }
+          });
         });
       }
     });
@@ -108,10 +120,10 @@ describe("OrderFormPage", () => {
       });
 
       await user.click(checkbox);
-      expect(checkbox).toBeChecked();
+      await waitFor(() => expect(checkbox).toBeChecked());
 
       await user.click(checkbox);
-      expect(checkbox).not.toBeChecked();
+      await waitFor(() => expect(checkbox).not.toBeChecked());
     });
   });
 

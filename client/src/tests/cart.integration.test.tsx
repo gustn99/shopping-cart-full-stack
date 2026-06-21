@@ -273,7 +273,7 @@ describe("주문 확인 버튼", () => {
 
     // /order-form 이동 확인 및 렌더링 확인
     expect(
-      screen.getByRole("list", { name: /상품 리스트/ }),
+      await screen.findByRole("list", { name: /상품 리스트/ }),
     ).toBeInTheDocument();
     expect(screen.getByTestId("order-summary")).toBeInTheDocument();
   });
