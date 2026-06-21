@@ -16,11 +16,11 @@ export default function OrderConfirmSection() {
         결제 확인
       </Text>
       <Spacing size={1.5} />
-      <Text typograph="caption" as="p">
+      <Description typograph="caption" as="p">
         총 {productCount}종류의 상품 {totalQuantity}개를 주문했습니다.
         <br />
         최종 결제 금액을 확인해 주세요.
-      </Text>
+      </Description>
       <Spacing size={1.5} />
       <Text typograph="heading2">총 결제 금액</Text>
       <Spacing size={0.75} />
@@ -33,4 +33,8 @@ export default function OrderConfirmSection() {
 const Wrapper = styled(Flex)`
   height: 100%;
   margin: auto;
+`;
+
+const Description = styled(Text)`
+  text-align: center;
 `;
