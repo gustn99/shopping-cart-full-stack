@@ -12,7 +12,7 @@ export default function useOrderCompleteNavigate() {
   const loc = useLocation();
 
   const navigate = (state: LocationState) => {
-    nav(ROUTES.ORDER_COMPLETE, { state });
+    nav(ROUTES.ORDER_COMPLETE, { state, replace: true });
   };
 
   const getState = (): LocationState | null => {
