@@ -13,7 +13,7 @@ export interface PostOrderResponse {
 
 export interface OrderProductDetail {
   id: number;
-  title: string;
+  name: string;
   price: number;
   imgUrl: string;
   quantity: number;
@@ -48,7 +48,7 @@ export interface GetDiscountResponse {
 
 export interface Coupon {
   id: number;
-  title: string;
+  name: string;
   expirationDate: string;
   minOrderAmount?: number;
   availableHours?: string;

@@ -29,7 +29,7 @@ export interface ServerPostOrderResponse {
 
 export interface ServerOrderProductDetail {
   id: number;
-  title: string;
+  name: string;
   price: number;
   imgUrl: string;
   quantity: number;
@@ -73,7 +73,7 @@ export interface ServerGetDiscountResponse {
 
 export interface ServerCoupon {
   id: number;
-  title: string;
+  name: string;
   expirationDate: string;
   minOrderAmount?: number;
   availableHours?: string;
@@ -109,7 +109,7 @@ export const mapServerPostOrderResponseToResponse = (response: ServerPostOrderRe
 
 export const mapServerOrderProductDetailToDetail = (product: ServerOrderProductDetail): OrderProductDetail => ({
   id: product.id,
-  title: product.title,
+  name: product.name,
   price: product.price,
   imgUrl: product.imgUrl,
   quantity: product.quantity,
@@ -135,7 +135,7 @@ export const mapServerGetDiscountResponseToResponse = (response: ServerGetDiscou
 
 export const mapServerCouponToCoupon = (coupon: ServerCoupon): Coupon => ({
   id: coupon.id,
-  title: coupon.title,
+  name: coupon.name,
   expirationDate: coupon.expirationDate,
   minOrderAmount: coupon.minOrderAmount,
   availableHours: coupon.availableHours,
