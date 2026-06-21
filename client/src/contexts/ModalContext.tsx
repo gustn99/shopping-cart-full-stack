@@ -21,12 +21,12 @@ interface ModalState {
 }
 
 interface ModalContextValue {
-  open: <TResult = any, TProps = Record<string, unknown>>(
-    key: string,
-    Component: React.ElementType<TProps & ModalComponentProps<TResult>>,
-    props?: TProps,
-    options?: ModalOptions,
-  ) => Promise<TResult>;
+  open: <TResult = any, TProps = Record<string, unknown>>(args: {
+    key: string;
+    Component: React.ElementType<TProps & ModalComponentProps<TResult>>;
+    props?: TProps;
+    options?: ModalOptions;
+  }) => Promise<TResult>;
   close: () => void;
 }
 
@@ -35,7 +35,7 @@ export const ModalContext = createContext<ModalContextValue | null>(null);
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [modal, setModal] = useState<ModalState | null>(null);
 
-  const open: ModalContextValue["open"] = useCallback((key, Component, props, options) => {
+  const open: ModalContextValue["open"] = useCallback(({ key, Component, props, options }) => {
     return new Promise((resolve, reject) => {
       const handleResolve = (value: any) => {
         setModal(null);

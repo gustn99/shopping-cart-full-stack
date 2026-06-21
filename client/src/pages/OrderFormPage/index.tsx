@@ -11,10 +11,10 @@ import OrderSummarySection from "@components/feature/OrderSummarySection";
 import PaymentButton from "@components/feature/PaymentButton.tsx";
 import ProductListSection from "@components/feature/ProductListSection";
 import styled from "@emotion/styled";
-import { useRef } from "react";
+import { useModal } from "@hooks/useModal.ts";
 
 export default function OrderFormPage() {
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const modal = useModal();
 
   return (
     <>
@@ -33,9 +33,13 @@ export default function OrderFormPage() {
             rounded
             variant="outline"
             size="md"
-            onClick={() => {
-              modalRef.current?.showModal();
-              document.body.style.overflowY = "hidden";
+            onClick={async () => {
+              const selectedCouponIds = await modal.open<number[]>({
+                key: "couponModal",
+                Component: CouponModal,
+                options: { shouldLockScroll: true },
+              });
+              console.log(selectedCouponIds);
             }}
           >
             쿠폰 적용
@@ -51,8 +55,6 @@ export default function OrderFormPage() {
         </PositionBottom>
         <Spacing size={7} />
       </PageLayout>
-
-      <CouponModal modalRef={modalRef} />
     </>
   );
 }
