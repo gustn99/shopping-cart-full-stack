@@ -6,6 +6,7 @@ import OrderFormPage from "@pages/OrderFormPage";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Navigate, Route, Routes } from "react-router";
+import { ModalProvider } from "@contexts/ModalContext.tsx";
 
 /**
  * App.tsx 의 라우팅을 MemoryRouter 위에서 그대로 재현한다.
@@ -17,13 +18,15 @@ export function renderCartsApp(initialPath: string = ROUTES.CARTS) {
 
   const result = render(
     <MemoryRouter initialEntries={[initialPath]}>
-      <Routes>
-        <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
-        <Route path={ROUTES.CARTS} element={<CartsPage />} />
-        <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
-        <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
-        <Route path={ROUTES.ORDER_COMPLETE} element={<OrderCompletePage />} />
-      </Routes>
+      <ModalProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
+          <Route path={ROUTES.CARTS} element={<CartsPage />} />
+          <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
+          <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
+          <Route path={ROUTES.ORDER_COMPLETE} element={<OrderCompletePage />} />
+        </Routes>
+      </ModalProvider>
     </MemoryRouter>,
   );
 
