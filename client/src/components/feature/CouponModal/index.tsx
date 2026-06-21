@@ -7,14 +7,13 @@ import Spacing from "@components/common/shared/Spacing";
 import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
 import useCheckedItems from "@hooks/useCheckedItems.ts";
-import { COLOR_PALETTE } from "@styles/colorPalette.ts";
-import { useEffect } from "react";
+import type { ModalComponentProps } from "@contexts/ModalContext.tsx";
+import { useEffect, useRef } from "react";
+import Modal from "@components/common/shared/Modal";
 
-interface CouponModalProps {
-  modalRef: React.RefObject<HTMLDialogElement | null>;
-}
+interface CouponModalProps extends ModalComponentProps<number[]> {}
 
-export default function CouponModal({ modalRef }: CouponModalProps) {
+export default function CouponModal({ resolve, reject }: CouponModalProps) {
   const { checkedItems, select, unselect } = useCheckedItems<number>();
   const canCheckMore = checkedItems.length < 2;
   const isChecked = (id: number) => checkedItems.includes(id);
@@ -27,24 +26,26 @@ export default function CouponModal({ modalRef }: CouponModalProps) {
   };
 
   const handleClose = () => {
-    modalRef.current?.close();
-    document.body.style.overflowY = "";
+    reject();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
+  const handleConfirm = () => {
+    resolve(checkedItems);
   };
 
+  const modalRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    return () => {
-      document.body.style.overflowY = "";
-    };
+    modalRef.current?.showModal();
   }, []);
 
   return (
-    <CouponModalContainer ref={modalRef} onClick={handleBackdropClick} aria-label="쿠폰">
+    <CouponModalContainer
+      ref={modalRef}
+      shouldLockBackgroundScroll
+      closeOnBackdropClick
+      onClose={handleClose}
+      aria-label="쿠폰"
+    >
       <Flex justify="space-between" align="center">
         <Text typograph="heading2" as="h3">
           쿠폰을 선택해 주세요
@@ -72,24 +73,18 @@ export default function CouponModal({ modalRef }: CouponModalProps) {
         ))}
       </CouponList>
       <Spacing size={1.25} />
-      <Button fullWidth rounded size="md" intent="secondary" onClick={handleClose}>
+      <Button fullWidth rounded size="md" intent="secondary" onClick={handleConfirm}>
         쿠폰 사용
       </Button>
     </CouponModalContainer>
   );
 }
 
-const CouponModalContainer = styled.dialog`
+const CouponModalContainer = styled(Modal)`
   width: 382px;
   height: 614px;
   padding: 24px 32px;
   border-radius: 8px;
-  margin: auto;
-  border: none;
-
-  ::backdrop {
-    background-color: ${COLOR_PALETTE.dimmed};
-  }
 
   &[open] {
     display: flex;
