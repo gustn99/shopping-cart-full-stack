@@ -37,7 +37,7 @@ export default function Modal({
   }, [shouldLockBackgroundScroll]);
 
   return (
-    <ModalWrapper onClick={handleBackdropClick} {...props}>
+    <ModalWrapper onClick={handleBackdropClick} onClose={onClose} {...props}>
       {children}
     </ModalWrapper>
   );
