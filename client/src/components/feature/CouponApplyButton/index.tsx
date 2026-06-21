@@ -1,6 +1,7 @@
 import CouponModal from "@components/feature/CouponModal";
 import Button from "@components/common/shared/Button";
 import { useModal } from "@hooks/useModal.ts";
+import useOrderUpdateMutation from "@/hooks/useOrderUpdateMutation";
 
 interface CouponApplyButtonProps {
   orderId: number;
@@ -8,6 +9,7 @@ interface CouponApplyButtonProps {
 
 export default function CouponApplyButton({ orderId }: CouponApplyButtonProps) {
   const modal = useModal();
+  const { mutate: updateOrder } = useOrderUpdateMutation(orderId);
 
   return (
     <Button
@@ -16,11 +18,11 @@ export default function CouponApplyButton({ orderId }: CouponApplyButtonProps) {
       variant="outline"
       size="md"
       onClick={async () => {
-        const result = await modal.open<number[]>("couponModal", CouponModal);
+        const result = await modal.open<number[], { orderId: number }>("couponModal", CouponModal, { orderId });
         if (result.status === "canceled") return;
 
         const selectedCouponIds = result.data;
-        console.log(selectedCouponIds);
+        updateOrder({ couponId: selectedCouponIds });
       }}
     >
       쿠폰 적용
