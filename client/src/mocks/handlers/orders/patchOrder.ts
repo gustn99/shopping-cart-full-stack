@@ -9,12 +9,15 @@ export const patchOrder = http.patch("/api/orders/:orderId", async ({ params, re
   const order = orders.find((o) => o.orderId === Number(orderId));
 
   if (!order) {
-    return HttpResponse.json({ errorCode: "ORDER_EXPIRED", errorMessage: "주문이 만료되었습니다." }, { status: 409 });
+    return HttpResponse.json(
+      { status: 409, errorCode: "ORDER_EXPIRED", errorMessage: "주문이 만료되었습니다." },
+      { status: 409 },
+    );
   }
 
   if (body.couponId !== undefined && !Array.isArray(body.couponId)) {
     return HttpResponse.json(
-      { errorCode: "TYPE_MISMATCH", errorMessage: "타입이 일치하지 않습니다." },
+      { status: 400, errorCode: "TYPE_MISMATCH", errorMessage: "타입이 일치하지 않습니다." },
       { status: 400 },
     );
   }
@@ -30,9 +33,12 @@ export const patchOrder = http.patch("/api/orders/:orderId", async ({ params, re
 
   return HttpResponse.json<ServerPatchOrderResponse>(
     {
-      couponId: order.coupons,
-      isRemoteArea: order.isRemoteArea,
-      deliveryFee: order.deliveryFee,
+      status: 200,
+      data: {
+        couponId: order.coupons,
+        isRemoteArea: order.isRemoteArea,
+        deliveryFee: order.deliveryFee,
+      },
     },
     { status: 200 },
   );

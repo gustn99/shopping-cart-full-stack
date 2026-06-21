@@ -10,6 +10,7 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
   if (!body || !body.products) {
     return HttpResponse.json(
       {
+        status: 400,
         errorCode: "MISSING_FIELD",
         errorMessage: "필수값이 누락되었습니다.",
         data: [{ type: "products", errorCode: "MISSING_FIELD_PRODUCTS" }],
@@ -20,7 +21,7 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
 
   if (!Array.isArray(body.products)) {
     return HttpResponse.json(
-      { errorCode: "TYPE_MISMATCH", errorMessage: "타입이 일치하지 않습니다." },
+      { status: 400, errorCode: "TYPE_MISMATCH", errorMessage: "타입이 일치하지 않습니다." },
       { status: 400 },
     );
   }
@@ -33,7 +34,7 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
     // If product not found, we treat it as OUT_OF_STOCK in this mock context (or we could use RESOURCE_NOT_FOUND)
     if (!productData) {
       return HttpResponse.json(
-        { errorCode: "OUT_OF_STOCK", errorMessage: "품절된 상품이 포함되어 있습니다." },
+        { status: 409, errorCode: "OUT_OF_STOCK", errorMessage: "품절된 상품이 포함되어 있습니다." },
         { status: 409 },
       );
     }
@@ -58,5 +59,5 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
     deliveryFee: 3000,
   });
 
-  return HttpResponse.json<ServerPostOrderResponse>({ orderId }, { status: 201 });
+  return HttpResponse.json<ServerPostOrderResponse>({ status: 201, data: { orderId } }, { status: 201 });
 });
