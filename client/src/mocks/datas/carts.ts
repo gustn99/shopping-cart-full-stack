@@ -1,10 +1,10 @@
-import type { ServerCart, ServerCartProduct } from "./types";
+import type { ServerCart, ServerCartProduct } from "./carts.type";
 
 export const makeServerCartProduct = (
   id: number,
   name: string,
   price: number,
-  quantity: number
+  quantity: number,
 ): ServerCartProduct => ({
   id,
   name,
