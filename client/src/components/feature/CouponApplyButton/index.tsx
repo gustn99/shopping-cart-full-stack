@@ -11,6 +11,7 @@ export default function CouponApplyButton({ orderId }: CouponApplyButtonProps) {
   const modal = useModal();
   const { mutate: updateOrder } = useOrderUpdateMutation(orderId);
 
+  // TODO: mutation이 밖에서 돌면 모달 내 버튼에서 loading 핸들링을 어떻게 할지 고민
   return (
     <Button
       fullWidth
