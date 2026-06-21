@@ -1,7 +1,11 @@
 import Flex from "@components/common/shared/Flex";
 import Text from "@components/common/shared/Text";
 
-export default function OrderFormHeading() {
+interface OrderFormHeadingProps {
+  orderId: number;
+}
+
+export default function OrderFormHeading({ orderId }: OrderFormHeadingProps) {
   // 주문 조회
 
   return (

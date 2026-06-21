@@ -6,7 +6,11 @@ import Divider from "@components/common/shared/Divider";
 import Flex from "@components/common/shared/Flex";
 import styled from "@emotion/styled";
 
-export default function OrderSummarySection() {
+interface OrderSummarySectionProps {
+  orderId: number;
+}
+
+export default function OrderSummarySection({ orderId }: OrderSummarySectionProps) {
   // summary 정보 조회
 
   return (

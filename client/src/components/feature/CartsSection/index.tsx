@@ -63,10 +63,10 @@ export default function CartsSection() {
     unselect(id);
   };
 
+  // TODO: 주문 플로우 구축하고 서버 응답 기반 orderId 연결 필요
   const handleConfirm = () => {
     navigate({
-      totalAmount,
-      products: data.filter(({ product }) => isChecked(product.id)),
+      orderId: 1,
     });
   };
 
@@ -139,7 +139,7 @@ export default function CartsSection() {
   );
 }
 
-const ContentContainer = styled(Flex.withComponent('section'))`
+const ContentContainer = styled(Flex.withComponent("section"))`
   width: 100%;
   padding-inline: 1.5rem;
   flex: 1;

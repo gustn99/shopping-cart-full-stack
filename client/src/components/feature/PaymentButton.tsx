@@ -1,7 +1,11 @@
 import useOrderCompleteNavigate from "@hooks/useOrderCompleteNavigate.ts";
 import Button from "@components/common/shared/Button";
 
-export default function PaymentButton() {
+interface PaymentButtonProps {
+  orderId: number;
+}
+
+export default function PaymentButton({ orderId }: PaymentButtonProps) {
   const { navigate } = useOrderCompleteNavigate();
 
   return (

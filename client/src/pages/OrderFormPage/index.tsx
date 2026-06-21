@@ -10,28 +10,38 @@ import PaymentButton from "@components/feature/PaymentButton.tsx";
 import ProductListSection from "@components/feature/ProductListSection";
 import styled from "@emotion/styled";
 import CouponApplyButton from "@components/feature/CouponApplyButton";
+import useOrderFormNavigate from "@hooks/useOrderFormNavigate.ts";
 
 export default function OrderFormPage() {
+  const { getState } = useOrderFormNavigate();
+
+  const state = getState();
+  if (!state || Number.isNaN(state.orderId)) {
+    throw new Error("주문 정보를 찾을 수 없습니다.");
+  }
+
+  const orderId = state.orderId;
+
   return (
     <PageLayout>
       <Header LeftComponent={<GoBackButton />} />
 
       <OrderFormPageWrapper>
         <Spacing size={2.25} />
-        <OrderFormHeading />
+        <OrderFormHeading orderId={orderId} />
         <Spacing size={2.25} />
 
         <ProductListSection />
         <Spacing size={2} />
-        <CouponApplyButton />
+        <CouponApplyButton orderId={orderId} />
         <Spacing size={2} />
-        <DeliverySection />
+        <DeliverySection orderId={orderId} />
         <Spacing size={2} />
-        <OrderSummarySection />
+        <OrderSummarySection orderId={orderId} />
       </OrderFormPageWrapper>
 
       <PositionBottom>
-        <PaymentButton />
+        <PaymentButton orderId={orderId} />
       </PositionBottom>
       <Spacing size={7} />
     </PageLayout>

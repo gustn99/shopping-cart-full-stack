@@ -3,7 +3,11 @@ import Text from "@components/common/shared/Text";
 import Spacing from "@components/common/shared/Spacing";
 import CheckBox from "@components/common/shared/CheckBox";
 
-export default function DeliverySection() {
+interface DeliverySectionProps {
+  orderId: number;
+}
+
+export default function DeliverySection({ orderId }: DeliverySectionProps) {
   // 배송 정보 조회 및 변경
 
   return (

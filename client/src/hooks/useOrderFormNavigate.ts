@@ -1,10 +1,8 @@
-import type { Cart } from "@/types/cartProduct";
 import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "@constants/routes.ts";
 
 interface LocationState {
-  products: Cart[];
-  totalAmount: number;
+  orderId: number;
 }
 
 export default function useOrderFormNavigate() {

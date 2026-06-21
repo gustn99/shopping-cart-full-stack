@@ -2,7 +2,11 @@ import CouponModal from "@components/feature/CouponModal";
 import Button from "@components/common/shared/Button";
 import { useModal } from "@hooks/useModal.ts";
 
-export default function CouponApplyButton() {
+interface CouponApplyButtonProps {
+  orderId: number;
+}
+
+export default function CouponApplyButton({ orderId }: CouponApplyButtonProps) {
   const modal = useModal();
 
   return (
