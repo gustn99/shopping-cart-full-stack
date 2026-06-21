@@ -47,7 +47,7 @@ export default function OrderFormPage() {
           </OrderFormPageWrapper>
 
           <PositionBottom>
-            <PaymentButton />
+            <PaymentButton orderId={orderId} />
           </PositionBottom>
           <Spacing size={7} />
         </Suspense>
