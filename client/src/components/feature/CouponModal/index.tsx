@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 import Modal from "@components/common/shared/Modal";
 import useOrderCouponsQuery from "@/hooks/useOrderCouponsQuery";
 import useOrderQuery from "@/hooks/useOrderQuery";
+import useOrderDiscountQuery from "@/hooks/useOrderDiscountQuery";
 
 interface CouponModalProps extends ModalComponentProps<number[]> {
   orderId: number;
@@ -19,11 +20,15 @@ interface CouponModalProps extends ModalComponentProps<number[]> {
 
 export default function CouponModal({ orderId, onConfirm, onCancel }: CouponModalProps) {
   const { data: order } = useOrderQuery(orderId);
+  const { checkedItems, select, unselect } = useCheckedItems<number>(order.coupons);
+
   const {
     data: { coupons },
   } = useOrderCouponsQuery(orderId);
+  const {
+    data: { discountAmount },
+  } = useOrderDiscountQuery(orderId, { couponId: checkedItems });
 
-  const { checkedItems, select, unselect } = useCheckedItems<number>(order.coupons);
   const canCheckMore = checkedItems.length < 2;
   const isChecked = (id: number) => checkedItems.includes(id);
   const isDisabled = (id: number) => !canCheckMore && !isChecked(id);
@@ -84,7 +89,7 @@ export default function CouponModal({ orderId, onConfirm, onCancel }: CouponModa
       </CouponList>
       <Spacing size={1.25} />
       <Button fullWidth rounded size="md" intent="secondary" onClick={handleConfirm}>
-        쿠폰 사용
+        총 {discountAmount.toLocaleString()}원 할인 쿠폰 사용하기
       </Button>
     </CouponModalContainer>
   );
