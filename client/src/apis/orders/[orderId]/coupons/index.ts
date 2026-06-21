@@ -1,0 +1,13 @@
+import fetcher from "@apis/instance";
+import type { GetCouponsResponse } from "@/types/order";
+import { mapServerGetCouponsResponseToResponse } from "../../dto";
+import type { ServerGetCouponsResponse } from "../../dto";
+
+const ORDERS_API = "/orders";
+
+export const getCoupons = async (orderId: number): Promise<GetCouponsResponse> => {
+  const response = await fetcher.get<ServerGetCouponsResponse>(
+    `${ORDERS_API}/${orderId}/coupons`,
+  );
+  return mapServerGetCouponsResponseToResponse(response);
+};
