@@ -6,13 +6,9 @@ export const getDiscount = http.get("/api/orders/:orderId/discount", ({ request 
   const couponIds = url.searchParams.getAll("couponId");
 
   if (!couponIds || couponIds.length === 0) {
-    return HttpResponse.json(
-      {
-        errorCode: "MISSING_FIELD",
-        errorMessage: "필수값이 누락되었습니다.",
-        data: [{ type: "couponId", errorCode: "MISSING_FIELD_COUPONID" }],
-      },
-      { status: 400 },
+    return HttpResponse.json<ServerGetDiscountResponse>(
+      { status: 200, data: { discountAmount: 0 } },
+      { status: 200 },
     );
   }
 

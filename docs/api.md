@@ -139,15 +139,15 @@
 
 ### Responses
 
-| Status Code | Error Description | Response Body                                                                                                              |
-|:------------|:------------------|:---------------------------------------------------------------------------------------------------------------------------|
-| 200         | \-                | `{ "discountAmount": "number" }`                                                                                           |
-| 400         | 타입 불일치            | `{ "errorCode": "TYPE_MISMATCH", "errorMessage": "타입이 일치하지 않습니다." }`                                                       |
-| 400         | 필수값 누락            | `{ "errorCode": "MISSING_FIELD", "errorMessage": "필수값이 누락되었습니다.", "data": [{ "type": "string", "errorCode": "string" }] }` |
+| Status Code | Error Description | Response Body                                                        |
+|:------------|:------------------|:---------------------------------------------------------------------|
+| 200         | \-                | `{ "discountAmount": "number" }`                                     |
+| 400         | 타입 불일치            | `{ "errorCode": "TYPE_MISMATCH", "errorMessage": "타입이 일치하지 않습니다." }` |
 
 ### 비고
 
 - 정액 쿠폰(FIXED5000, BOGO 등)을 먼저 적용한 후, 할인된 금액에서 정율 쿠폰(MIRACLESALE 등)을 적용하여 최종 금액 계산
+- couponId가 누락된 경우 0 반환
 
 -----
 

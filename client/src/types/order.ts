@@ -39,7 +39,7 @@ export interface PatchOrderResponse {
 }
 
 export interface GetDiscountRequest {
-  couponId: number[];
+  couponId?: number[];
 }
 
 export interface GetDiscountResponse {

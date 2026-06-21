@@ -61,7 +61,7 @@ export interface ServerPatchOrderResponse {
 }
 
 export interface ServerGetDiscountRequest {
-  couponId: number[];
+  couponId?: number[];
 }
 
 export interface ServerGetDiscountResponse {
