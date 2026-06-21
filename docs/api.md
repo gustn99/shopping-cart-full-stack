@@ -63,10 +63,10 @@
 
 ### Responses
 
-| Status Code | Error Description | Response Body                                                                                                                                                                                                   |
-|:------------|:------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 200         | \-                | `{ "products": [ { "title": "string", "price": "number", "imgUrl": "string", "quantity": "number", "hasGift": "boolean" }, ... ], "coupons": "number[]", "isRemoteArea": "boolean", "deliveryFee?": "number" }` |
-| 409         | 주문 만료             | `{ "errorCode": "ORDER_EXPIRED", "errorMessage": "주문이 만료되었습니다." }`                                                                                                                                              |
+| Status Code | Error Description | Response Body                                                                                                                                                                                                                   |
+|:------------|:------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 200         | \-                | `{ "products": [ { "id": "number", "title": "string", "price": "number", "imgUrl": "string", "quantity": "number", "hasGift": "boolean" }, ... ], "coupons": "number[]", "isRemoteArea": "boolean", "deliveryFee?": "number" }` |
+| 409         | 주문 만료             | `{ "errorCode": "ORDER_EXPIRED", "errorMessage": "주문이 만료되었습니다." }`                                                                                                                                                              |
 
 ### 비고
 
@@ -167,9 +167,9 @@
 
 ### Responses
 
-| Status Code | Error Description | Response Body                                                                                                                                                 |
-|:------------|:------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 200         | \-                | `{ "coupons": [ { "title": "string", "expirationDate": "string", "minOrderAmount?": "number", "availableHours?": "string", "isCouponUsable": "boolean" } ] }` |
+| Status Code | Error Description | Response Body                                                                                                                                                                 |
+|:------------|:------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 200         | \-                | `{ "coupons": [ { "id": "number", "title": "string", "expirationDate": "string", "minOrderAmount?": "number", "availableHours?": "string", "isCouponUsable": "boolean" } ] }` |
 
 ### 비고 (쿠폰 정책)  - **5,000원 할인 (FIXED5000):** 최소 주문 100,000원 이상 시 적용
 
