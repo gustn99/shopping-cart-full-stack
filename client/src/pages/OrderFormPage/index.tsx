@@ -31,7 +31,7 @@ export default function OrderFormPage() {
         <OrderFormHeading orderId={orderId} />
         <Spacing size={2.25} />
 
-        <ProductListSection />
+        <ProductListSection orderId={orderId} />
         <Spacing size={2} />
         <CouponApplyButton orderId={orderId} />
         <Spacing size={2} />
