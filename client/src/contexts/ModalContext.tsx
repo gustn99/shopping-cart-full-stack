@@ -2,6 +2,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useCallback, useMemo } from "react";
 
+export type ModalResult<T> =
+  | { status: "confirmed"; data: T }
+  | { status: "canceled" };
+
 export interface ModalComponentProps<T = any> {
   resolve: (value: T | PromiseLike<T>) => void;
   reject: (reason?: any) => void;
@@ -20,7 +24,7 @@ interface ModalContextValue {
     key: string,
     Component: React.ElementType<TProps & ModalComponentProps<TResult>>,
     props?: TProps,
-  ) => Promise<TResult>;
+  ) => Promise<ModalResult<TResult>>;
   close: () => void;
 }
 
@@ -30,15 +34,15 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [modal, setModal] = useState<ModalState | null>(null);
 
   const open: ModalContextValue["open"] = useCallback((key, Component, props) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const handleResolve = (value: any) => {
         setModal(null);
-        resolve(value);
+        resolve({ status: "confirmed", data: value });
       };
 
-      const handleReject = (reason?: any) => {
+      const handleReject = () => {
         setModal(null);
-        reject(reason);
+        resolve({ status: "canceled" });
       };
 
       setModal({

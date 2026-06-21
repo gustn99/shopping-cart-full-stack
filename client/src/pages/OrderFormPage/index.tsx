@@ -34,7 +34,10 @@ export default function OrderFormPage() {
             variant="outline"
             size="md"
             onClick={async () => {
-              const selectedCouponIds = await modal.open<number[]>("couponModal", CouponModal);
+              const result = await modal.open<number[]>("couponModal", CouponModal);
+              if (result.status === "canceled") return;
+
+              const selectedCouponIds = result.data;
               console.log(selectedCouponIds);
             }}
           >
