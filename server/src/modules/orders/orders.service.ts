@@ -40,13 +40,14 @@ export const calculateDeliveryFee = (totalAmount: number, isRemoteArea: boolean)
 	return (totalAmount >= 100000 ? 0 : 3000) + (isRemoteArea ? 3000 : 0);
 };
 
-const getValidCoupons = (totalAmount: number, bogoTargetId: number | null, currentHour: number) => {
-	return couponModels.filter(coupon => coupon.isValid(totalAmount, bogoTargetId, currentHour));
+const getValidCoupons = (totalAmount: number, bogoTargetId: number | null, currentHour: number, deliveryFee: number) => {
+	return couponModels.filter(coupon => coupon.isValid(totalAmount, bogoTargetId, currentHour, deliveryFee));
 };
 
 const getMaxDiscountCouponIds = (totalAmount: number, bogoTargetId: number | null, currentHour: number, isRemoteArea: boolean = false) => {
+	const deliveryFee = calculateDeliveryFee(totalAmount, isRemoteArea);
 	// bogo는 할인 금액으로 포함하지 않으므로, 조합 대상에서 제외
-	const validCoupons = getValidCoupons(totalAmount, bogoTargetId, currentHour).filter(c => c.id !== 2);
+	const validCoupons = getValidCoupons(totalAmount, bogoTargetId, currentHour, deliveryFee).filter(c => c.id !== 2);
 
 	let maxDiscount = -1;
 	let bestCombination: number[] = [];
@@ -62,8 +63,6 @@ const getMaxDiscountCouponIds = (totalAmount: number, bogoTargetId: number | nul
 	for (const combo of combinations) {
 		let discountAmount = 0;
 		let remainingTotal = totalAmount;
-
-		const deliveryFee = calculateDeliveryFee(totalAmount, isRemoteArea);
 
 		for (const coupon of combo) {
 			const result = coupon.calculateDiscount(remainingTotal, totalAmount, deliveryFee);
@@ -149,7 +148,8 @@ export const updateOrder = (orderId: number, req: UpdateOrderRequest) => {
 			throw new ServiceError('BAD_REQUEST', '쿠폰은 최대 2개까지 선택 가능합니다.');
 		}
 		const currentHour = new Date().getHours();
-		const validCoupons = getValidCoupons(totalAmount, bogoTargetId, currentHour);
+		const deliveryFee = calculateDeliveryFee(totalAmount, order.isRemoteArea);
+		const validCoupons = getValidCoupons(totalAmount, bogoTargetId, currentHour, deliveryFee);
 		const validIds = validCoupons.map(c => c.id);
 
 		for (const cid of req.couponId) {
@@ -224,7 +224,8 @@ export const getCoupons = (orderId: number) => {
 
 	const {totalAmount, bogoTargetId} = getOrderTotalAndBogoTarget(order.products);
 	const currentHour = new Date().getHours();
-	const validCoupons = getValidCoupons(totalAmount, bogoTargetId, currentHour);
+	const deliveryFee = calculateDeliveryFee(totalAmount, order.isRemoteArea);
+	const validCoupons = getValidCoupons(totalAmount, bogoTargetId, currentHour, deliveryFee);
 	const validIds = validCoupons.map(c => c.id);
 
 	return {

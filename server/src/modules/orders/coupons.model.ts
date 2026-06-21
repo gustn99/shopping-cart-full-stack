@@ -20,7 +20,7 @@ export abstract class Coupon {
 	abstract calculateDiscount(remainingTotal: number, originalTotal: number, deliveryFee: number): { discount: number; remainingTotal: number };
 
 	// Check if coupon is valid for this order
-	isValid(totalAmount: number, bogoTargetId: number | null, currentHour: number): boolean {
+	isValid(totalAmount: number, bogoTargetId: number | null, currentHour: number, deliveryFee: number): boolean {
 		if (this.minOrderAmount !== undefined && totalAmount < this.minOrderAmount) {
 			return false;
 		}
@@ -78,9 +78,9 @@ export class BogoCoupon extends Coupon {
 		return {discount: 0, remainingTotal}; // BOGO discount is not included in numeric discountAmount
 	}
 
-	isValid(totalAmount: number, bogoTargetId: number | null, currentHour: number): boolean {
+	isValid(totalAmount: number, bogoTargetId: number | null, currentHour: number, deliveryFee: number): boolean {
 		if (bogoTargetId === null) return false;
-		return super.isValid(totalAmount, bogoTargetId, currentHour);
+		return super.isValid(totalAmount, bogoTargetId, currentHour, deliveryFee);
 	}
 }
 
@@ -90,7 +90,12 @@ export class FreeShippingCoupon extends Coupon {
 	}
 
 	calculateDiscount(remainingTotal: number, originalTotal: number, deliveryFee: number) {
-		return {discount: deliveryFee, remainingTotal};
+		return { discount: deliveryFee, remainingTotal };
+	}
+
+	isValid(totalAmount: number, bogoTargetId: number | null, currentHour: number, deliveryFee: number): boolean {
+		if (deliveryFee === 0) return false;
+		return super.isValid(totalAmount, bogoTargetId, currentHour, deliveryFee);
 	}
 }
 
