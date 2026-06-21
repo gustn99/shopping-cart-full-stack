@@ -5,17 +5,20 @@ import OrderConfirmPage from "@pages/OrderConfirmPage";
 import OrderCompletePage from "@pages/OrderCompletePage";
 import OrderFormPage from "@pages/OrderFormPage";
 import { ROUTES } from "@constants/routes";
+import { ModalProvider } from "@contexts/ModalContext";
 
 function App() {
   return (
     <BrowserRouter basename="/shopping-cart-full-stack">
-      <Routes>
-        <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
-        <Route path={ROUTES.CARTS} element={<CartsPage />} />
-        <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
-        <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
-        <Route path={ROUTES.ORDER_COMPLETE} element={<OrderCompletePage />} />
-      </Routes>
+      <ModalProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to={ROUTES.CARTS} replace />} />
+          <Route path={ROUTES.CARTS} element={<CartsPage />} />
+          <Route path={ROUTES.ORDER_CONFIRM} element={<OrderConfirmPage />} />
+          <Route path={ROUTES.ORDER_FORM} element={<OrderFormPage />} />
+          <Route path={ROUTES.ORDER_COMPLETE} element={<OrderCompletePage />} />
+        </Routes>
+      </ModalProvider>
     </BrowserRouter>
   );
 }
