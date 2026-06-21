@@ -4,32 +4,43 @@ import Flex from "@components/common/shared/Flex";
 import Spacing from "@components/common/shared/Spacing";
 import Divider from "@components/common/shared/Divider";
 import styled from "@emotion/styled";
+import type { Coupon } from "@/types/order";
 
 interface CouponItemProps {
+  coupon: Coupon;
   disabled: boolean;
   checked: boolean;
   onSelect: () => void;
 }
 
-export default function CouponItem({ disabled, checked, onSelect }: CouponItemProps) {
+export default function CouponItem({ coupon, disabled, checked, onSelect }: CouponItemProps) {
+  const isActuallyDisabled = !coupon.isCouponUsable || disabled;
+
   return (
-    <CouponItemContainer disabled={disabled}>
+    <CouponItemContainer disabled={isActuallyDisabled}>
       <Divider />
       <Spacing size={0.75} />
       <Flex gap={8} align="center">
-        <CheckBox disabled={disabled} checked={checked} onChange={onSelect} />
-        <CouponItemText typograph="body1" as="h4" disabled={disabled}>
-          5,000원 할인 쿠폰
+        <CheckBox disabled={isActuallyDisabled} checked={checked} onChange={onSelect} />
+        <CouponItemText typograph="body1" as="h4" disabled={isActuallyDisabled}>
+          {coupon.name}
         </CouponItemText>
       </Flex>
       <Spacing size={0.75} />
       <Flex direction="column" gap={4}>
-        <CouponItemText typograph="caption" disabled={disabled}>
-          만료일: 2024년 11월 30일
+        <CouponItemText typograph="caption" disabled={isActuallyDisabled}>
+          만료일: {coupon.expirationDate}
         </CouponItemText>
-        <CouponItemText typograph="caption" disabled={disabled}>
-          최소 주문 금액: 100,000원
-        </CouponItemText>
+        {coupon.minOrderAmount != null && (
+          <CouponItemText typograph="caption" disabled={isActuallyDisabled}>
+            최소 주문 금액: {coupon.minOrderAmount.toLocaleString()}원
+          </CouponItemText>
+        )}
+        {coupon.availableHours != null && (
+          <CouponItemText typograph="caption" disabled={isActuallyDisabled}>
+            사용 가능 시간: {coupon.availableHours}
+          </CouponItemText>
+        )}
       </Flex>
       <Spacing size={0.75} />
     </CouponItemContainer>

@@ -10,11 +10,20 @@ import useCheckedItems from "@hooks/useCheckedItems.ts";
 import type { ModalComponentProps } from "@contexts/ModalContext.tsx";
 import { useEffect, useRef } from "react";
 import Modal from "@components/common/shared/Modal";
+import useOrderCouponsQuery from "@/hooks/useOrderCouponsQuery";
+import useOrderQuery from "@/hooks/useOrderQuery";
 
-interface CouponModalProps extends ModalComponentProps<number[]> {}
+interface CouponModalProps extends ModalComponentProps<number[]> {
+  orderId: number;
+}
 
-export default function CouponModal({ onConfirm, onCancel }: CouponModalProps) {
-  const { checkedItems, select, unselect } = useCheckedItems<number>();
+export default function CouponModal({ orderId, onConfirm, onCancel }: CouponModalProps) {
+  const { data: order } = useOrderQuery(orderId);
+  const {
+    data: { coupons },
+  } = useOrderCouponsQuery(orderId);
+
+  const { checkedItems, select, unselect } = useCheckedItems<number>(order.coupons);
   const canCheckMore = checkedItems.length < 2;
   const isChecked = (id: number) => checkedItems.includes(id);
   const isDisabled = (id: number) => !canCheckMore && !isChecked(id);
@@ -63,12 +72,13 @@ export default function CouponModal({ onConfirm, onCancel }: CouponModalProps) {
       <Spacing size={1} />
 
       <CouponList as="ul" direction="column" gap={12} aria-label="쿠폰 리스트">
-        {[0, 1, 2, 3, 4, 5].map((id) => (
+        {coupons.map((coupon) => (
           <CouponItem
-            key={id}
-            disabled={isDisabled(id)}
-            checked={isChecked(id)}
-            onSelect={() => handleCouponToggle(id)}
+            key={coupon.id}
+            coupon={coupon}
+            disabled={isDisabled(coupon.id)}
+            checked={isChecked(coupon.id)}
+            onSelect={() => handleCouponToggle(coupon.id)}
           />
         ))}
       </CouponList>
