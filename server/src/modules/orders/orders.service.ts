@@ -173,6 +173,12 @@ export const updateOrder = (orderId: number, req: UpdateOrderRequest) => {
 	// Recalculate delivery fee based on current state
 	order.deliveryFee = calculateDeliveryFee(totalAmount, order.isRemoteArea);
 
+	ordersRepository.update(orderId, {
+		couponIds: order.couponIds,
+		isRemoteArea: order.isRemoteArea,
+		deliveryFee: order.deliveryFee,
+	});
+
 	const response: any = {};
 	if (req.couponId !== undefined) {
 		response.couponId = order.couponIds;
