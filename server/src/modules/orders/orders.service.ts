@@ -3,6 +3,9 @@ import * as productsRepository from '../products/products.repository.ts';
 import {ServiceError} from '../../common/error.ts';
 import type {OrderProduct, CreateOrderRequest, UpdateOrderRequest} from './orders.dto.ts';
 import {rawCoupons as COUPONS} from '../../raw/raw.coupons.ts';
+import {createCoupon, Coupon} from './coupons.model.ts';
+
+const couponModels = COUPONS.map(createCoupon);
 
 const checkOrderExpired = (createdAt: Date) => {
 	const now = new Date();
@@ -33,24 +36,12 @@ const getOrderTotalAndBogoTarget = (products: OrderProduct[]) => {
 	return {totalAmount, bogoTargetId, maxBogoPrice};
 };
 
+export const calculateDeliveryFee = (totalAmount: number, isRemoteArea: boolean) => {
+	return (totalAmount >= 100000 ? 0 : 3000) + (isRemoteArea ? 3000 : 0);
+};
+
 const getValidCoupons = (totalAmount: number, bogoTargetId: number | null, currentHour: number) => {
-	return COUPONS.filter(coupon => {
-		if (coupon.minOrderAmount !== undefined && totalAmount < coupon.minOrderAmount) {
-			return false;
-		}
-		if (coupon.availableHours) {
-			const [startStr, endStr] = coupon.availableHours.split('-');
-			const startHour = parseInt(startStr.split(':')[0], 10);
-			const endHour = parseInt(endStr.split(':')[0], 10);
-			if (currentHour < startHour || currentHour >= endHour) {
-				return false;
-			}
-		}
-		if (coupon.id === 2 && bogoTargetId === null) {
-			return false;
-		}
-		return true;
-	});
+	return couponModels.filter(coupon => coupon.isValid(totalAmount, bogoTargetId, currentHour));
 };
 
 const getMaxDiscountCouponIds = (totalAmount: number, bogoTargetId: number | null, currentHour: number, isRemoteArea: boolean = false) => {
@@ -60,7 +51,7 @@ const getMaxDiscountCouponIds = (totalAmount: number, bogoTargetId: number | nul
 	let maxDiscount = -1;
 	let bestCombination: number[] = [];
 
-	const combinations = [[] as typeof COUPONS[0][]];
+	const combinations: Coupon[][] = [[]];
 	for (let i = 0; i < validCoupons.length; i++) {
 		combinations.push([validCoupons[i]]);
 		for (let j = i + 1; j < validCoupons.length; j++) {
@@ -72,17 +63,12 @@ const getMaxDiscountCouponIds = (totalAmount: number, bogoTargetId: number | nul
 		let discountAmount = 0;
 		let remainingTotal = totalAmount;
 
-		if (combo.find(c => c.id === 1)) {
-			discountAmount += 5000;
-			remainingTotal = Math.max(0, remainingTotal - 5000);
-		}
-		if (combo.find(c => c.id === 4)) {
-			discountAmount += remainingTotal * 0.3;
-		}
-		if (combo.find(c => c.id === 3)) {
-			let feeBeforeCoupon = totalAmount >= 100000 ? 0 : 3000;
-			if (isRemoteArea) feeBeforeCoupon += 3000;
-			discountAmount += feeBeforeCoupon;
+		const deliveryFee = calculateDeliveryFee(totalAmount, isRemoteArea);
+
+		for (const coupon of combo) {
+			const result = coupon.calculateDiscount(remainingTotal, totalAmount, deliveryFee);
+			discountAmount += result.discount;
+			remainingTotal = result.remainingTotal;
 		}
 
 		if (discountAmount > maxDiscount) {
@@ -113,8 +99,7 @@ export const createOrder = (req: CreateOrderRequest) => {
 	const validCouponIds = getMaxDiscountCouponIds(totalAmount, bogoTargetId, currentHour, false);
 
 	const order = ordersRepository.create(req.products, validCouponIds);
-	const baseFee = totalAmount >= 100000 ? 0 : 3000;
-	order.deliveryFee = validCouponIds.includes(3) ? 0 : baseFee;
+	order.deliveryFee = calculateDeliveryFee(totalAmount, false);
 	return {orderId: order.id};
 };
 
@@ -168,7 +153,7 @@ export const updateOrder = (orderId: number, req: UpdateOrderRequest) => {
 		const validIds = validCoupons.map(c => c.id);
 
 		for (const cid of req.couponId) {
-			if (!COUPONS.find(c => c.id === cid)) {
+			if (!couponModels.find(c => c.id === cid)) {
 				throw new ServiceError('RESOURCE_NOT_FOUND', 'Invalid coupon id');
 			}
 			if (!validIds.includes(cid)) {
@@ -186,8 +171,7 @@ export const updateOrder = (orderId: number, req: UpdateOrderRequest) => {
 	}
 
 	// Recalculate delivery fee based on current state
-	const feeBeforeCoupon = (totalAmount >= 100000 ? 0 : 3000) + (order.isRemoteArea ? 3000 : 0);
-	order.deliveryFee = order.couponIds.includes(3) ? 0 : feeBeforeCoupon;
+	order.deliveryFee = calculateDeliveryFee(totalAmount, order.isRemoteArea);
 
 	const response: any = {};
 	if (req.couponId !== undefined) {
@@ -210,18 +194,25 @@ export const getDiscount = (orderId: number, couponIds: number[]) => {
 	if (!order) throw new ServiceError('RESOURCE_NOT_FOUND', 'Order not found');
 
 	const {totalAmount} = getOrderTotalAndBogoTarget(order.products);
+
+	const appliedCoupons = couponIds
+	.map(id => couponModels.find(c => c.id === id))
+	.filter((c): c is Coupon => c !== undefined);
+
+	// 정액 -> 정률 순으로 적용하기 위해 id 오름차순 정렬 (1: 정액, 4: 정률)
+	appliedCoupons.sort((a, b) => a.id - b.id);
+
 	let discountAmount = 0;
 	let remainingTotal = totalAmount;
 
-	// FIXED5000
-	if (couponIds.includes(1)) {
-		discountAmount += 5000;
-		remainingTotal = Math.max(0, remainingTotal - 5000);
-	}
+	const deliveryFee = calculateDeliveryFee(totalAmount, order.isRemoteArea);
 
-	// MIRACLESALE
-	if (couponIds.includes(4)) {
-		discountAmount += remainingTotal * 0.3;
+	for (const coupon of appliedCoupons) {
+		if (coupon.id === 2) continue; // 상품 할인(및 배송비 할인)만 합산, BOGO 제외
+
+		const result = coupon.calculateDiscount(remainingTotal, totalAmount, deliveryFee);
+		discountAmount += result.discount;
+		remainingTotal = result.remainingTotal;
 	}
 
 	return {discountAmount};
@@ -237,7 +228,7 @@ export const getCoupons = (orderId: number) => {
 	const validIds = validCoupons.map(c => c.id);
 
 	return {
-		coupons: COUPONS.map(c => ({
+		coupons: couponModels.map(c => ({
 			id: c.id,
 			name: c.name,
 			expirationDate: c.expirationDate,
