@@ -30,12 +30,9 @@ export const patchOrder = http.patch("/api/orders/:orderId", async ({ params, re
 
   return HttpResponse.json<ServerPatchOrderResponse>(
     {
-      status: 200,
-      data: {
-        couponId: order.coupons,
-        isRemoteArea: order.isRemoteArea,
-        deliveryFee: order.deliveryFee,
-      },
+      couponId: order.coupons,
+      isRemoteArea: order.isRemoteArea,
+      deliveryFee: order.deliveryFee,
     },
     { status: 200 },
   );

@@ -14,13 +14,10 @@ export const getOrder = http.get("/api/orders/:orderId", ({ params }) => {
 
   return HttpResponse.json<ServerGetOrderResponse>(
     {
-      status: 200,
-      data: {
-        products: order.products,
-        coupons: order.coupons ?? [],
-        isRemoteArea: order.isRemoteArea ?? false,
-        deliveryFee: order.deliveryFee,
-      },
+      products: order.products,
+      coupons: order.coupons ?? [],
+      isRemoteArea: order.isRemoteArea ?? false,
+      deliveryFee: order.deliveryFee,
     },
     { status: 200 },
   );

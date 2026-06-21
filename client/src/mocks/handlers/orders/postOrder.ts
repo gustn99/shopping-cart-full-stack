@@ -58,5 +58,5 @@ export const postOrder = http.post("/api/orders", async ({ request }) => {
     deliveryFee: 3000,
   });
 
-  return HttpResponse.json<ServerPostOrderResponse>({ status: 201, data: { orderId } }, { status: 201 });
+  return HttpResponse.json<ServerPostOrderResponse>({ orderId }, { status: 201 });
 });

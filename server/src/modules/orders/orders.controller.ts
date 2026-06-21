@@ -1,21 +1,22 @@
 import type { Request, Response } from "express";
 import * as ordersService from "./orders.service.ts";
 import { ServiceError } from "../../common/error.ts";
+import { fail, success } from "../../common/response.ts";
 
 export const createOrder = (req: Request, res: Response) => {
   try {
     const result = ordersService.createOrder(req.body);
-    res.status(201).json(result);
+    return success(res, result, 201);
   } catch (error) {
     if (error instanceof ServiceError) {
       if (error.errorCode === "MISSING_FIELD" || error.errorCode === "TYPE_MISMATCH") {
-        return res.status(400).json({ errorCode: error.errorCode, errorMessage: error.errorMessage, data: error.data });
+        return fail(res, error.errorCode, error.errorMessage, 400, error.data);
       }
       if (error.errorCode === "OUT_OF_STOCK") {
-        return res.status(409).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 409);
       }
     }
-    res.status(500).json({ errorCode: "INTERNAL_SERVER_ERROR", errorMessage: "Internal Server Error" });
+    return fail(res, "INTERNAL_SERVER_ERROR", "Internal Server Error", 500);
   }
 };
 
@@ -23,17 +24,17 @@ export const getOrder = (req: Request, res: Response) => {
   try {
     const orderId = parseInt(req.params.orderId as string, 10);
     const result = ordersService.getOrder(orderId);
-    res.status(200).json(result);
+    return success(res, result);
   } catch (error) {
     if (error instanceof ServiceError) {
       if (error.errorCode === "ORDER_EXPIRED") {
-        return res.status(409).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 409);
       }
       if (error.errorCode === "RESOURCE_NOT_FOUND") {
-        return res.status(404).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 404);
       }
     }
-    res.status(500).json({ errorCode: "INTERNAL_SERVER_ERROR", errorMessage: "Internal Server Error" });
+    return fail(res, "INTERNAL_SERVER_ERROR", "Internal Server Error", 500);
   }
 };
 
@@ -41,23 +42,23 @@ export const updateOrder = (req: Request, res: Response) => {
   try {
     const orderId = parseInt(req.params.orderId as string, 10);
     const result = ordersService.updateOrder(orderId, req.body);
-    res.status(200).json(result);
+    return success(res, result);
   } catch (error) {
     if (error instanceof ServiceError) {
       if (error.errorCode === "MISSING_FIELD" || error.errorCode === "TYPE_MISMATCH") {
-        return res.status(400).json({ errorCode: error.errorCode, errorMessage: error.errorMessage, data: error.data });
+        return fail(res, error.errorCode, error.errorMessage, 400, error.data);
       }
       if (error.errorCode === "ORDER_EXPIRED") {
-        return res.status(409).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 409);
       }
       if (error.errorCode === "COUPON_EXPIRED") {
-        return res.status(422).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 422);
       }
       if (error.errorCode === "RESOURCE_NOT_FOUND") {
-        return res.status(404).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 404);
       }
     }
-    res.status(500).json({ errorCode: "INTERNAL_SERVER_ERROR", errorMessage: "Internal Server Error" });
+    return fail(res, "INTERNAL_SERVER_ERROR", "Internal Server Error", 500);
   }
 };
 
@@ -68,7 +69,7 @@ export const getDiscount = (req: Request, res: Response) => {
     let couponIds: number[] = [];
     
     if (couponIdRaw === undefined) {
-      return res.status(200).json({ discountAmount: 0 });
+      return success(res, { discountAmount: 0 });
     }
     
     if (Array.isArray(couponIdRaw)) {
@@ -78,17 +79,17 @@ export const getDiscount = (req: Request, res: Response) => {
     }
 
     const result = ordersService.getDiscount(orderId, couponIds);
-    res.status(200).json(result);
+    return success(res, result);
   } catch (error) {
     if (error instanceof ServiceError) {
       if (error.errorCode === "TYPE_MISMATCH") {
-        return res.status(400).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 400);
       }
       if (error.errorCode === "RESOURCE_NOT_FOUND") {
-        return res.status(404).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 404);
       }
     }
-    res.status(500).json({ errorCode: "INTERNAL_SERVER_ERROR", errorMessage: "Internal Server Error" });
+    return fail(res, "INTERNAL_SERVER_ERROR", "Internal Server Error", 500);
   }
 };
 
@@ -96,13 +97,14 @@ export const getCoupons = (req: Request, res: Response) => {
   try {
     const orderId = parseInt(req.params.orderId as string, 10);
     const result = ordersService.getCoupons(orderId);
-    res.status(200).json(result);
+    return success(res, result);
   } catch (error) {
     if (error instanceof ServiceError) {
       if (error.errorCode === "RESOURCE_NOT_FOUND") {
-        return res.status(404).json({ errorCode: error.errorCode, errorMessage: error.errorMessage });
+        return fail(res, error.errorCode, error.errorMessage, 404);
       }
     }
-    res.status(500).json({ errorCode: "INTERNAL_SERVER_ERROR", errorMessage: "Internal Server Error" });
+    return fail(res, "INTERNAL_SERVER_ERROR", "Internal Server Error", 500);
   }
 };
+
