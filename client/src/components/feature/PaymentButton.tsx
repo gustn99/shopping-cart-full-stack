@@ -5,7 +5,7 @@ export default function PaymentButton() {
   const { navigate } = useOrderCompleteNavigate();
 
   return (
-    <Button fullWidth onClick={() => navigate()}>
+    <Button fullWidth onClick={() => navigate({ productCount: 2, totalQuantity: 3, totalAmount: 70000 })}>
       결제하기
     </Button>
   );

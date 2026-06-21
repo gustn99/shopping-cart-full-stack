@@ -1,15 +1,22 @@
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "@constants/routes.ts";
+
+interface LocationState {
+  productCount: number;
+  totalQuantity: number;
+  totalAmount: number;
+}
 
 export default function useOrderCompleteNavigate() {
   const nav = useNavigate();
+  const loc = useLocation();
 
-  const navigate = () => {
-    nav(ROUTES.ORDER_COMPLETE);
+  const navigate = (state: LocationState) => {
+    nav(ROUTES.ORDER_COMPLETE, { state });
   };
 
-  const getState = () => {
-    return null;
+  const getState = (): LocationState | null => {
+    return loc.state;
   };
 
   return {
