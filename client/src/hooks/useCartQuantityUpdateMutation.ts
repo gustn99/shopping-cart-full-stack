@@ -10,7 +10,7 @@ export default function useCartQuantityUpdateMutation() {
     mutateFn: (productId: number, quantity: number) =>
       updateCartItemQuantity(DEFAULT_CART_ID, productId, quantity),
     onSuccess: () => {
-      queryStore.invalidate(CART_QUERY_KEY);
+      queryStore.invalidate([CART_QUERY_KEY]);
     },
   });
 }

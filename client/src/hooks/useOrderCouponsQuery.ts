@@ -5,7 +5,7 @@ export const ORDER_COUPONS_QUERY_KEY = "order-coupons";
 
 export default function useOrderCouponsQuery(orderId: number) {
   return useSuspenseQuery({
-    key: `${ORDER_COUPONS_QUERY_KEY}-${orderId}`,
+    key: [ORDER_COUPONS_QUERY_KEY, orderId],
     queryFn: () => getCoupons(orderId),
   });
 }

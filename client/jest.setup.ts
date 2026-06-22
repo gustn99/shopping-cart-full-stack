@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom";
 
-import { CART_QUERY_KEY } from "@hooks/useCartQuery";
 import { queryStore } from "@/queries/instance";
 import { server } from "@/mocks/server";
 import { seedCarts } from "@/mocks/datas/carts";
@@ -40,8 +39,8 @@ afterAll(() => server.close());
 beforeEach(() => {
   // 1) 서버 상태를 기본 장바구니로 초기화
   seedCarts();
-  // 2) queryStore 는 싱글톤이라 테스트 간 캐시/에러가 누수된다 → 무효화
-  queryStore.invalidate(CART_QUERY_KEY);
+  // 2) queryStore 는 싱글톤이라 테스트 간 캐시/에러가 누수된다 → 전체 초기화
+  queryStore.clear();
   // 3) 선택 상태 persist 용 localStorage 초기화
   localStorage.clear();
 });
