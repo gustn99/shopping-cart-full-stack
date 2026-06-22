@@ -37,7 +37,7 @@ export default function OrderSummarySection({ orderId }: OrderSummarySectionProp
 
       <OrderSummaryRow label="총 주문 금액" value={totalOrderAmount} />
       <Spacing size={0.5} />
-      <OrderSummaryRow label="쿠폰 할인 금액" value={-discountAmount} />
+      <OrderSummaryRow label="쿠폰 할인 금액" value={discountAmount === 0 ? discountAmount : -discountAmount} />
       <Spacing size={0.5} />
       <OrderSummaryRow label="배송비" value={deliveryFee} />
 
