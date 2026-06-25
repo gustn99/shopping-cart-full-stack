@@ -55,7 +55,7 @@ export default function CouponModal({ orderId, onConfirm, onCancel }: CouponModa
   }, []);
 
   return (
-    <Modal ref={modalRef} shouldLockBackgroundScroll closeOnBackdropClick onClose={handleClose} aria-label="쿠폰">
+    <Modal modalRef={modalRef} shouldLockBackgroundScroll closeOnBackdropClick onClose={handleClose} aria-label="쿠폰">
       <ContentContainer direction="column">
         <Flex justify="space-between" align="center">
           <Text typograph="heading2" as="h3">

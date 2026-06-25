@@ -2,13 +2,15 @@ import styled from "@emotion/styled";
 import { COLOR_PALETTE } from "@styles/colorPalette.ts";
 import { useEffect } from "react";
 
-interface ModalProps extends React.ComponentProps<"dialog"> {
+interface ModalProps extends React.ComponentProps<"div"> {
+  modalRef: React.RefObject<HTMLDialogElement | null>;
   shouldLockBackgroundScroll?: boolean;
   closeOnBackdropClick?: boolean;
   onClose?: () => void;
 }
 
 export default function Modal({
+  modalRef,
   shouldLockBackgroundScroll,
   closeOnBackdropClick,
   onClose,
@@ -16,6 +18,7 @@ export default function Modal({
   ...props
 }: ModalProps) {
   const handleBackdropClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (!closeOnBackdropClick) return;
 
     if (e.target === e.currentTarget) {
@@ -37,8 +40,8 @@ export default function Modal({
   }, [shouldLockBackgroundScroll]);
 
   return (
-    <ModalWrapper onClick={handleBackdropClick} onClose={onClose} {...props}>
-      {children}
+    <ModalWrapper ref={modalRef} onClick={handleBackdropClick} onClose={onClose}>
+      <ModalContent {...props}>{children}</ModalContent>
     </ModalWrapper>
   );
 }
@@ -51,3 +54,5 @@ const ModalWrapper = styled.dialog`
     background-color: ${COLOR_PALETTE.dimmed};
   }
 `;
+
+const ModalContent = styled.div``;
