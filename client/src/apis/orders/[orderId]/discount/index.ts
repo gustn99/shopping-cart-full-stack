@@ -1,9 +1,8 @@
 import fetcher from "@apis/instance";
 import type { GetDiscountRequest, GetDiscountResponse } from "@/types/order";
+import { ORDERS_API } from "@apis/orders";
 import { mapServerGetDiscountResponseToResponse } from "../../dto";
 import type { ServerGetDiscountResponse } from "../../dto";
-
-const ORDERS_API = "/orders";
 
 export const getDiscount = async (orderId: number, params: GetDiscountRequest): Promise<GetDiscountResponse> => {
   const queryParams = new URLSearchParams();
