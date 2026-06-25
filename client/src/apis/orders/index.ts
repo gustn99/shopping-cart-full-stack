@@ -8,5 +8,6 @@ export const ORDERS_API = "/orders";
 export const postOrder = async (body: PostOrderRequest): Promise<PostOrderResponse> => {
   const serverReq = mapPostOrderRequestToServer(body);
   const response = await fetcher.post<ServerPostOrderResponse>(ORDERS_API, serverReq);
+
   return mapServerPostOrderResponseToResponse(response);
 };

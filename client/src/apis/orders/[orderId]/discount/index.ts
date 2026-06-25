@@ -11,5 +11,6 @@ export const getDiscount = async (orderId: number, params: GetDiscountRequest): 
   const response = await fetcher.get<ServerGetDiscountResponse>(
     `${ORDERS_API}/${orderId}/discount?${queryParams.toString()}`,
   );
+
   return mapServerGetDiscountResponseToResponse(response);
 };

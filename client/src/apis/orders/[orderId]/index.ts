@@ -16,5 +16,6 @@ export const getOrder = async (orderId: number): Promise<GetOrderResponse> => {
 export const patchOrder = async (orderId: number, body: PatchOrderRequest): Promise<PatchOrderResponse> => {
   const serverReq = mapPatchOrderRequestToServer(body);
   const response = await fetcher.patch<ServerPatchOrderResponse>(`${ORDERS_API}/${orderId}`, serverReq);
+
   return mapServerPatchOrderResponseToResponse(response);
 };
