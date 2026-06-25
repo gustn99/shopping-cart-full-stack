@@ -8,7 +8,7 @@ import Text from "@components/common/shared/Text";
 import styled from "@emotion/styled";
 import useCheckedItems from "@hooks/useCheckedItems.ts";
 import type { ModalComponentProps } from "@contexts/ModalContext.tsx";
-import { useEffect, useRef } from "react";
+import { useDeferredValue, useEffect, useRef } from "react";
 import Modal from "@components/common/shared/Modal";
 import useOrderCouponsQuery from "@/hooks/useOrderCouponsQuery";
 import useOrderQuery from "@/hooks/useOrderQuery";
@@ -21,13 +21,14 @@ interface CouponModalProps extends ModalComponentProps<number[]> {
 export default function CouponModal({ orderId, onConfirm, onCancel }: CouponModalProps) {
   const { data: order } = useOrderQuery(orderId);
   const { checkedItems, select, unselect } = useCheckedItems<number>(order.coupons);
+  const deferredCheckedItems = useDeferredValue(checkedItems);
 
   const {
     data: { coupons },
   } = useOrderCouponsQuery(orderId);
   const {
     data: { discountAmount },
-  } = useOrderDiscountQuery(orderId, { couponId: checkedItems });
+  } = useOrderDiscountQuery(orderId, { couponId: deferredCheckedItems });
 
   const canCheckMore = checkedItems.length < 2;
   const isChecked = (id: number) => checkedItems.includes(id);
